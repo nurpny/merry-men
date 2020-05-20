@@ -2,7 +2,7 @@ const { DataTypes } = require('sequelize')
 const db = require('../db')
 
 const Portfolio = db.define('portfolio', {
-  stock: {
+  symbol: {
     type: DataTypes.STRING,
     allowNull: false,
     validate: {

@@ -11,4 +11,4 @@ Transaction.belongsTo(User)
 User.hasMany(Portfolio)
 Portfolio.belongsTo(User)
 
-module.exports = {db}
+module.exports = {db, User, Transaction, Portfolio}
