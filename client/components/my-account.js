@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import Transactions from './transactions'
 import Portfolio from './portfolio'
 import styled from 'styled-components'
+import { loggingOut } from '../store/user-store.js'
 
 
 const StyledMenuContainer = styled.section`
@@ -31,7 +32,7 @@ export const MyAccount = (props) => {
         <StyledMenuBorder> | </StyledMenuBorder>
         <StyledMenu onClick={() => setShowTransactions(true)}>Transactions</StyledMenu>
         <StyledMenuBorder> | </StyledMenuBorder>
-        <StyledMenu>Logout</StyledMenu>
+        <StyledMenu onClick={props.loggingOut}>Logout</StyledMenu>
       </StyledMenuContainer>
 
       {!showTransactions && <Portfolio/>}
@@ -46,8 +47,9 @@ const mapStateToProps = (state) => ({
 
 })
 
-const mapDispatchToProps = {
+const mapDispatchToProps = (dispatch) => ({
+  loggingOut: () => (dispatch(loggingOut()))
+})
 
-}
 
 export default connect(mapStateToProps, mapDispatchToProps)(MyAccount)
