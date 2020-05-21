@@ -3,7 +3,6 @@ import { createGlobalStyle } from 'styled-components'
 
 export const GlobalStyle = createGlobalStyle`
   html {
-    font: 400 16px Roboto, sans-serif;
     box-sizing: border-box;
   }
 
@@ -12,7 +11,7 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   body {
-    font: 500 0.8rem Roboto, sans-serif;
+    font: 400 14px Roboto, sans-serif;
   }
 
 
