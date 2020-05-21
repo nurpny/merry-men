@@ -18,7 +18,7 @@ class Routes extends Component {
       <div>
         {this.props.user.id &&
           <Switch>
-            <Route path='/account' component={MyAccount} />
+            <Route path='/' component={MyAccount} />
           </Switch>
         }
         {!this.props.user.id &&
@@ -33,8 +33,6 @@ class Routes extends Component {
   }
 }
 
-
-
 const mapStateToProps = (state) => ({
   user: state.user
 })
@@ -45,4 +43,3 @@ const mapDispatchToProps = (dispatch) => ({
 
 export default connect(mapStateToProps, mapDispatchToProps)(Routes)
 
-// https://blog.logrocket.com/how-to-style-forms-with-css-a-beginners-guide/
