@@ -13,6 +13,15 @@ const removeUser = () => ({type: REMOVE_USER})
 
 
 // Thunk Creators
+export const gettingSessionUser = () => async dispatch => {
+  try {
+    const res = await axios.get('/auth/sessionUser')
+    dispatch(getUser(res.data || defaultUser))
+  } catch (err) {
+    console.error(err)
+  }
+}
+
 
 export const loggingIn = (email, password) => async dispatch => {
   let res
@@ -32,6 +41,7 @@ export const signingUp = (name, email, password) => async dispatch => {
   let res
   try {
     res = await axios.post(`/auth/signup`, {name, email, password})
+
   } catch (authError) {
     return dispatch(getUser({error: authError}))
   }

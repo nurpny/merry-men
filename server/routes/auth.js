@@ -1,4 +1,16 @@
 const router = require('express').Router()
+const { User } = require('../db/index')
+
+router.get('/sessionUser', (req, res) => {
+  res.json(req.user)
+})
+
+router.post('/logout', (req, res) => {
+  req.logout()
+  req.session.destroy()
+  res.redirect('/')
+})
+
 
 router.post('/login', async (req, res, next) => {
   try {
