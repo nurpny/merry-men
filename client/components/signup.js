@@ -1,6 +1,7 @@
 import React, { useReducer } from 'react'
 import { connect } from 'react-redux'
 import { signingUp } from '../store/user-store'
+import { StyledFormContainer } from '../themes/StyledFormContainer'
 
 export const signup = (props) => {
   const [userInput, setUserInput] = useReducer((state, newState) => ({
@@ -17,14 +18,14 @@ export const signup = (props) => {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <StyledFormContainer onSubmit={handleSubmit}>
       <h1>Sign up Form</h1>
       <div> <input name="name" placeholder="Name" type="text" onChange={handleChange} required='required'></input>  </div>
       <div>  <input name="email" placeholder="Email" type="email" onChange={handleChange} required='required'></input> </div>
       <div> <input name="password" placeholder="Password" type="password" onChange={handleChange} required='required'></input> </div>
       <button type="submit">Create Your Account</button>
     <div>{props.user.error && props.user.error.response.data}</div>
-    </form >
+    </StyledFormContainer >
   )
 }
 
