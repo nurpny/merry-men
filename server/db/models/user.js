@@ -29,7 +29,7 @@ const User = db.define('user', {
   },
   cash: {
     type: DataTypes.INTEGER,
-    defaultValue: 500000
+    defaultValue: 5000 * 100
   }
 }, {
   defaultScope: {

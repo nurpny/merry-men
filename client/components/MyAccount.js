@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
+import styled from 'styled-components'
 import Transactions from './Transactions'
 import Portfolio from './Portfolio'
-import styled from 'styled-components'
+import BuySell from './BuySell'
 import { loggingOut } from '../store/user-store.js'
 
 
@@ -21,6 +22,11 @@ const StyledMenuBorder = styled.section`
   margin: 20px 10px;
 `
 
+const PortfolioContainer = styled.section`
+  display: flex;
+  flex-wrap: wrap;
+`
+
 export const MyAccount = (props) => {
   const [showTransactions, setShowTransactions] = useState(false);
 
@@ -35,7 +41,11 @@ export const MyAccount = (props) => {
         <StyledMenu onClick={props.loggingOut}>Logout</StyledMenu>
       </StyledMenuContainer>
 
-      {!showTransactions && <Portfolio/>}
+      {!showTransactions &&
+        <PortfolioContainer>
+          <Portfolio/>
+          <BuySell/>
+        </PortfolioContainer>}
       {showTransactions && <Transactions/>}
 
     </div>

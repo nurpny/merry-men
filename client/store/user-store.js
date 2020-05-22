@@ -8,7 +8,7 @@ const REMOVE_USER = 'REMOVE_USER'
 const defaultUser = {}
 
 // Action Creators
-const getUser = user => ({type: GET_USER, user})
+export const getUser = user => ({type: GET_USER, user})
 const removeUser = () => ({type: REMOVE_USER})
 
 
@@ -21,7 +21,6 @@ export const gettingSessionUser = () => async dispatch => {
     console.error(err)
   }
 }
-
 
 export const loggingIn = (email, password) => async dispatch => {
   let res

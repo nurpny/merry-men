@@ -3,6 +3,7 @@ export const theme = {
     lightgrey: '#dce3e5',
     blue: "#3d7e9a",
     lightblue: "#f9fafb",
-    red: "#905",
+    red: "#A31621",
+    green: "#679436"
   },
 }

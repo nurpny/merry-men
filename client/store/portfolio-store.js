@@ -1,15 +1,23 @@
 import axios from 'axios'
-const IEX_PUBLIC_KEY = "pk_f5f64fabf63c44f4ac83a9e955f59e3e"
+import { IEX_PUBLIC_KEY } from './store'
 
 // Action Types
 const GET_PORTFOLIO = 'GET_PORTFOLIO'
+const UPDATE_PORTFOLIO = 'UPDATE_PORTFOLIO'
 
 // Initial State
 const defaultPortfolio = []
 
 // Action Creators
-const getPortfolio = portfolio => ({ type: GET_PORTFOLIO, portfolio })
+const getPortfolio = portfolio => ({
+  type: GET_PORTFOLIO,
+  portfolio
+})
 
+export const updatePortfolio = pftItem => ({
+  type: UPDATE_PORTFOLIO,
+  pftItem
+})
 
 // Thunk Creators
 export const gettingPortfolio = (userId) => async dispatch => {
@@ -19,11 +27,10 @@ export const gettingPortfolio = (userId) => async dispatch => {
 
     // enrich the portfolio data from IEX
     await Promise.all(data.map(async pftItem => {
-     let {data} = await axios.get(`https://cloud.iexapis.com/stable/stock/${pftItem.symbol}/quote/latestPrice?token=${IEX_PUBLIC_KEY}`)
-     pftItem.price = data
-     pftItem.mv = Math.round(pftItem.price * 100 * pftItem.quantity)/100
+      let { data } = await axios.get(`https://cloud.iexapis.com/stable/stock/${pftItem.symbol}/quote/latestPrice?token=${IEX_PUBLIC_KEY}`)
+      pftItem.price = Math.round(data * 100)
+      pftItem.mv = pftItem.price * pftItem.quantity
     }))
-
     dispatch(getPortfolio(data))
 
   } catch (err) {
@@ -31,14 +38,14 @@ export const gettingPortfolio = (userId) => async dispatch => {
   }
 }
 
-
-
 // Reducer
 export default function (state = defaultPortfolio, action) {
   switch (action.type) {
     case GET_PORTFOLIO:
       return action.portfolio
+    case UPDATE_PORTFOLIO:
+      return [action.pftItem, ...state.filter(pftItem => pftItem.symbol !== action.pftItem.symbol)]
     default:
-      return state
+      return state;
   }
 }

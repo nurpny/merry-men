@@ -4,7 +4,7 @@ import { gettingPortfolio } from '../store/portfolio-store'
 import styled from 'styled-components'
 import { StyledTableContainer } from '../themes/StyledTableContainer'
 
-export class portfolio extends Component {
+export class Portfolio extends Component {
 
   componentDidMount() {
     this.props.onLoad(this.props.user.id);
@@ -50,6 +50,6 @@ const mapDispatchToProps = (dispatch) => ({
   onLoad: (userId) => dispatch(gettingPortfolio(userId))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(portfolio)
+export default connect(mapStateToProps, mapDispatchToProps)(Portfolio)
 
 
