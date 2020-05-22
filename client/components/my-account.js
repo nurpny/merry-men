@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
-import Transactions from './transactions'
+import Transactions from './Transactions'
 import Portfolio from './portfolio'
 import styled from 'styled-components'
 import { loggingOut } from '../store/user-store.js'

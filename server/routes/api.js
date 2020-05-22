@@ -12,4 +12,17 @@ router.get('/portfolio/:userId', async (req, res, next) => {
   }
 })
 
+
+router.get('/transactions/:userId', async (req, res, next) => {
+  try {
+    const transactions = await Transaction.findAll({
+      where: { userId: req.params.userId },
+      order: [['createdAt', 'DESC']]
+    })
+    res.json(transactions)
+  } catch (err) {
+    next(err)
+  }
+})
+
 module.exports = router

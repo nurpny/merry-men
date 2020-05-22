@@ -1,20 +1,55 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { gettingTransactions } from '../store/transaction-store'
+import { StyledTableContainer } from '../themes/StyledTableContainer'
+import getDateOnly from '../../utils/get-date-only'
 
-export const transactions = () => {
-  return (
-    <div>
-      Transactions
-    </div>
-  )
+export class transactions extends Component {
+
+  componentDidMount() {
+    this.props.onLoad(this.props.user.id);
+  }
+  render() {
+    return (
+      <StyledTableContainer>
+        <h1>Transaction</h1>
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Transaction ID</th>
+              <th>Symbol</th>
+              <th>Quantity</th>
+              <th>Price</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          {this.props.transactions.length ?
+            <tbody>
+              {this.props.transactions.map(txn =>
+                <tr key={txn.id}>
+                  <td>{getDateOnly(txn.createdAt)}</td>
+                  <td>{txn.id}</td>
+                  <td>{txn.symbol}</td>
+                  <td>{txn.quantity}</td>
+                  <td>{txn.price / 100}</td>
+                  <td>{- txn.quantity * txn.price / 100 }</td>
+                </tr>
+              )}
+            </tbody> : null}
+        </table>
+      </StyledTableContainer >
+    )
+  }
 }
 
 const mapStateToProps = (state) => ({
-
+  transactions: state.transactions,
+  user: state.user
 })
 
-const mapDispatchToProps = {
-
-}
+const mapDispatchToProps = (dispatch) => ({
+  onLoad: (userId) => dispatch(gettingTransactions(userId))
+})
 
 export default connect(mapStateToProps, mapDispatchToProps)(transactions)

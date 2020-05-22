@@ -6,7 +6,7 @@ const StyledFormContainer = styled.form`
   align-items: center;
   border: 1px solid ${props => props.theme.colors.blue};
   border-radius: 5px;
-  padding: 15px;
+  padding: 10px;
   margin-top: 40px;
   margin-left: auto;
   margin-right: auto;
