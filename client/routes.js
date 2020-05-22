@@ -1,8 +1,8 @@
 import { withRouter, Route, Switch } from 'react-router-dom'
 import React, { Component } from 'react'
-import Signup from './components/signup'
-import Signin from './components/signin'
-import MyAccount from './components/my-account'
+import Signup from './components/Signup'
+import Signin from './components/Signin'
+import MyAccount from './components/MyAccount'
 import { gettingSessionUser } from './store/user-store'
 import { connect } from 'react-redux'
 
