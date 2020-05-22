@@ -15,10 +15,12 @@ const StyledTableContainer = styled.section`
       border-left: 1px solid ${props => props.theme.colors.lightgrey};
       border-bottom: 1px solid ${props => props.theme.colors.lightgrey};
       border-top: 1px solid ${props => props.theme.colors.lightgrey};
+      padding: 5px;
     }
     td {
       border-bottom: 1px solid ${props => props.theme.colors.lightgrey};
       text-align: center;
+      padding: 5px;
     }
     th: first-child {
       border-left: none;

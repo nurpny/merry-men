@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { gettingPortfolio } from '../store/portfolio-store'
 import styled from 'styled-components'
 import { StyledTableContainer } from '../themes/StyledTableContainer'
+import convertToUSD from '../../utils/convert-to-usd';
 
 export class Portfolio extends Component {
 
@@ -28,9 +29,9 @@ export class Portfolio extends Component {
               {this.props.portfolio.map(item =>
                 <tr key={item.id}>
                   <td>{item.symbol}</td>
-                  <td>{item.price}</td>
+                  <td>{convertToUSD(item.price)}</td>
                   <td>{item.quantity}</td>
-                  <td>{item.mv}</td>
+                  <td>{convertToUSD(item.mv)}</td>
                 </tr>
               )}
             </tbody> : null}

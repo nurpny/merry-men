@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { gettingTransactions } from '../store/transaction-store'
 import { StyledTableContainer } from '../themes/StyledTableContainer'
 import getDateOnly from '../../utils/get-date-only'
+import convertToUSD from '../../utils/convert-to-usd';
 
 export class transactions extends Component {
 
@@ -12,16 +13,16 @@ export class transactions extends Component {
   render() {
     return (
       <StyledTableContainer>
-        <h1>Transaction</h1>
+        <h1>Transactions</h1>
         <table>
           <thead>
             <tr>
               <th>Date</th>
               <th>Transaction ID</th>
               <th>Symbol</th>
-              <th>Quantity</th>
               <th>Price</th>
-              <th>Total</th>
+              <th>Quantity</th>
+              <th>Net Cash</th>
             </tr>
           </thead>
           {this.props.transactions.length ?
@@ -31,9 +32,9 @@ export class transactions extends Component {
                   <td>{getDateOnly(txn.createdAt)}</td>
                   <td>{txn.id}</td>
                   <td>{txn.symbol}</td>
+                  <td>{convertToUSD(txn.price / 100)}</td>
                   <td>{txn.quantity}</td>
-                  <td>{txn.price / 100}</td>
-                  <td>{- txn.quantity * txn.price / 100 }</td>
+                  <td>{convertToUSD(- txn.quantity * txn.price / 100 )}</td>
                 </tr>
               )}
             </tbody> : null}
