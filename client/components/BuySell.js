@@ -44,7 +44,7 @@ export const BuySell = (props) => {
   return (
     <StyledBuySellContainer onSubmit={handleSubmit}>
       <div> <input name="ticker" placeholder="Ticker" type="text" onChange={handleChange} required='required'></input> </div>
-      <div> <input name="qty" placeholder="Quantity" type="number" onChange={handleChange} required='required' min="1"></input> </div>
+      <div> <input name="qty" placeholder="Quantity" type="number" onChange={handleChange} required='required' min="1" step="1"></input> </div>
       <div className="buttons">
         <button type="submit" name="sell" className="sell" onClick={handleClick}>Sell</button>
         <button type="submit" name="buy" className="buy" onClick={handleClick}>Buy</button>
