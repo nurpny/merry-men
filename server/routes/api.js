@@ -4,9 +4,9 @@ const { Portfolio, Transaction, User } = require('../db/index')
 
 router.post('/transactions', async (req, res, next) => {
   try {
-    const { userId, symbol, price, quantity } = req.body
+    const { symbol, price, quantity } = req.body
     const txn = await Transaction.create({
-      userId: userId,
+      userId: req.user.id,
       symbol: symbol,
       price: price*100,
       quantity: quantity
@@ -19,9 +19,9 @@ router.post('/transactions', async (req, res, next) => {
 
 router.put('/portfolio', async (req, res, next) => {
   try {
-    const { userId, symbol, quantity } = req.body
+    const { symbol, quantity } = req.body
     const [pftItem, created] = await Portfolio.findOrCreate({
-      where: { userId: userId, symbol: symbol },
+      where: { userId: req.user.id, symbol: symbol },
       defaults: { quantity: quantity }
     })
     if (!created) {
@@ -40,8 +40,8 @@ router.put('/portfolio', async (req, res, next) => {
 
 router.put('/user', async (req, res, next) => {
   try {
-    const { userId, marketValue } = req.body
-    const user = await User.findByPk(userId);
+    const { marketValue } = req.body
+    const user = await User.findByPk(req.user.id);
     user.cash -= marketValue;
     await user.save();
     res.json(user);
@@ -51,10 +51,10 @@ router.put('/user', async (req, res, next) => {
 })
 
 
-router.get('/portfolio/:userId', async (req, res, next) => {
+router.get('/portfolio/', async (req, res, next) => {
   try {
     const portfolio = await Portfolio.findAll({
-      where: { userId: req.params.userId }
+      where: { userId: req.user.id }
     })
     res.json(portfolio)
   } catch (err) {
@@ -63,10 +63,10 @@ router.get('/portfolio/:userId', async (req, res, next) => {
 })
 
 
-router.get('/transactions/:userId', async (req, res, next) => {
+router.get('/transactions/', async (req, res, next) => {
   try {
     const transactions = await Transaction.findAll({
-      where: { userId: req.params.userId },
+      where: { userId: req.user.id },
       order: [['createdAt', 'DESC']]
     })
     res.json(transactions)

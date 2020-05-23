@@ -26,19 +26,20 @@ const buySellError = errMsg => ({
 })
 
 // Thunk Creators
-export const gettingTransactions = (userId) => async dispatch => {
+export const gettingTransactions = () => async dispatch => {
   try {
     // get the transaction data from the server
-    let { data } = await axios.get(`/api/transactions/${userId}`)
+    let { data } = await axios.get(`/api/transactions/`)
     dispatch(getTransactions(data))
   } catch (err) {
     console.error(err)
   }
 }
 
-export const buyingSellingStock = (symbol, quantity, userId, userCash, buySell, portfolio) => async dispatch => {
+export const buyingSellingStock = (symbol, quantity, userCash, buySell, portfolio) => async dispatch => {
   symbol = symbol.toUpperCase();
   quantity = buySell === "buy" ? parseInt(quantity, 10) : -parseInt(quantity, 10);
+
   if (buySell === "sell") {
     // dispatch error if the user does not have enough stocks to sell in the user's portfolio
     let [pftItem] = portfolio.filter(pftItem => pftItem.symbol === symbol)
@@ -60,20 +61,20 @@ export const buyingSellingStock = (symbol, quantity, userId, userCash, buySell, 
   }
   try {
     // dispatch error if the user does not have enough cash
-    if (buySell === 'buy' && quantity * price > userCash) {
+    if (buySell === 'buy' && quantity * price * 100 > userCash) {
       return dispatch(buySellError("Not enough cash"));
     }
     // record the transaction
-    let newTxn = await axios.post(`/api/transactions/`, { userId, symbol, price, quantity });
+    let newTxn = await axios.post(`/api/transactions/`, { symbol, price, quantity });
     // update the user's portfolio
-    let pftItem = await axios.put(`/api/portfolio/`, { userId, symbol, quantity });
+    let pftItem = await axios.put(`/api/portfolio/`, { symbol, quantity });
     // update user's cash
     let marketValue = (quantity * price)
-    let user = await axios.put('/api/user', { userId, marketValue });
+    let user = await axios.put('/api/user', { marketValue });
     dispatch(addTransaction(newTxn.data));
     dispatch(getUser(user.data));
     // update user's portfolio view with updated prices for all
-    dispatch(gettingPortfolio(userId));
+    dispatch(gettingPortfolio());
 
   } catch (err) {
     return dispatch(buySellError("Something went wrong"))

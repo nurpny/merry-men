@@ -50,7 +50,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  onLoad: (userId) => dispatch(gettingTransactions(userId))
+  onLoad: () => dispatch(gettingTransactions())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(transactions)

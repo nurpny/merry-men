@@ -20,10 +20,10 @@ export const updatePortfolio = pftItem => ({
 })
 
 // Thunk Creators
-export const gettingPortfolio = (userId) => async dispatch => {
+export const gettingPortfolio = () => async dispatch => {
   try {
     // get the portfolio data from the server
-    let { data } = await axios.get(`/api/portfolio/${userId}`)
+    let { data } = await axios.get(`/api/portfolio/`)
 
     // enrich the portfolio data from IEX
     await Promise.all(data.map(async pftItem => {

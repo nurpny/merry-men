@@ -28,9 +28,10 @@ export const BuySell = (props) => {
   // buyOrSell states determined by which button the user presses
   const [buyOrSell, setBuyOrSell] = useState("")
 
+
   const handleSubmit = (evt) => {
     evt.preventDefault()
-    props.onSubmit(userInput.ticker, userInput.qty, props.user.id, props.user.cash, buyOrSell, props.portfolio)
+    props.onSubmit(userInput.ticker, userInput.qty, props.user.cash, buyOrSell, props.portfolio)
   }
 
   const handleChange = (evt) => {
@@ -46,8 +47,8 @@ export const BuySell = (props) => {
       <div> <input name="ticker" placeholder="Ticker" type="text" onChange={handleChange} required='required'></input> </div>
       <div> <input name="qty" placeholder="Quantity" type="number" onChange={handleChange} required='required' min="1" step="1"></input> </div>
       <div className="buttons">
-        <button type="submit" name="sell" className="sell" onClick={handleClick}>Sell</button>
         <button type="submit" name="buy" className="buy" onClick={handleClick}>Buy</button>
+        <button type="submit" name="sell" className="sell" onClick={handleClick}>Sell</button>
       </div>
       <div>{props.error.buySell && props.error.buySell}</div>
     </StyledBuySellContainer>
@@ -61,7 +62,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  onSubmit: (symbol, quantity, userId, userCash, buySell, portfolio) => dispatch(buyingSellingStock(symbol, quantity, userId, userCash, buySell, portfolio))
+  onSubmit: (symbol, quantity, userCash, buySell, portfolio) => dispatch(buyingSellingStock(symbol, quantity, userCash, buySell, portfolio))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(BuySell)

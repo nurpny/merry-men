@@ -5,6 +5,11 @@ import styled from 'styled-components'
 import { StyledTableContainer } from '../themes/StyledTableContainer'
 import convertToUSD from '../../utils/convert-to-usd';
 
+
+const StyledPftContainer = styled(StyledTableContainer)`
+  min-width: 300px;
+  width: 400px;
+`
 export class Portfolio extends Component {
 
   componentDidMount() {
@@ -13,7 +18,7 @@ export class Portfolio extends Component {
 
   render() {
     return (
-      <StyledTableContainer>
+      <StyledPftContainer>
         <h1>Portfolio</h1>
         <table>
           <thead>
@@ -37,7 +42,7 @@ export class Portfolio extends Component {
             </tbody> : null}
 
         </table>
-      </StyledTableContainer >
+      </StyledPftContainer >
     )
   }
 }
@@ -48,7 +53,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  onLoad: (userId) => dispatch(gettingPortfolio(userId))
+  onLoad: () => dispatch(gettingPortfolio())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Portfolio)

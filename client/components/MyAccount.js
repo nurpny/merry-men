@@ -25,6 +25,7 @@ const StyledMenuBorder = styled.section`
 const PortfolioContainer = styled.section`
   display: flex;
   flex-wrap: wrap;
+  justify-content: space-around;
 `
 
 export const MyAccount = (props) => {
