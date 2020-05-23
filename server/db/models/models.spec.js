@@ -1,7 +1,6 @@
 const { expect } = require('chai')
 const { db, User, Transaction, Portfolio } = require('../index')
 
-
 describe('Models', () => {
   beforeEach(() => {
     return db.sync({ force: true })
@@ -17,37 +16,42 @@ describe('Models', () => {
           email: 'james',
           password: '123',
           name: 'james'
-        }).then(function (result) {
-          expect.fail();
-          done()
-        }).catch(function (err) {
-          expect(err['name']).to.be.equal('SequelizeValidationError');
-          done()
         })
+          .then(function () {
+            expect.fail()
+            done()
+          })
+          .catch(function (err) {
+            expect(err['name']).to.be.equal('SequelizeValidationError')
+            done()
+          })
       })
       it('throws an error if not unique email', function (done) {
         User.create({
           email: 'james@email.com',
           password: '1234',
           name: 'james'
-        }).then(function (result) {
-          User.create({
-            email: 'james@email.com',
-            password: '1234',
-            name: 'james'
-          })
-        }).then(function (result) {
-          expect.fail();
-          done()
-        }).catch(function (err) {
-          expect(err['name']).to.be.equal('AssertionError');
-          done()
         })
+          .then(function () {
+            User.create({
+              email: 'james@email.com',
+              password: '1234',
+              name: 'james'
+            })
+          })
+          .then(function () {
+            expect.fail()
+            done()
+          })
+          .catch(function (err) {
+            expect(err['name']).to.be.equal('AssertionError')
+            done()
+          })
       })
     })
 
     describe('correctPassword', () => {
-      let james;
+      let james
       beforeEach(async () => {
         james = await User.create({
           name: 'james',
@@ -66,20 +70,21 @@ describe('Models', () => {
     })
   })
 
-
   describe('Transaction Model', () => {
     describe('validation errors', () => {
       it('throws an error if missing symbol', function (done) {
         Transaction.create({
           quantity: 50,
           price: 1555
-        }).then(function (result) {
-          expect.fail();
-          done()
-        }).catch(function (err) {
-          expect(err['name']).to.be.equal('SequelizeValidationError');
-          done()
         })
+          .then(function () {
+            expect.fail()
+            done()
+          })
+          .catch(function (err) {
+            expect(err['name']).to.be.equal('SequelizeValidationError')
+            done()
+          })
       })
     })
   })
@@ -88,21 +93,22 @@ describe('Models', () => {
     describe('validation errors', () => {
       it('throws an error if missing quantity', function (done) {
         Transaction.create({
-          symbol: 'AAPL',
-        }).then(function (result) {
-          expect.fail();
-          done()
-        }).catch(function (err) {
-          expect(err['name']).to.be.equal('SequelizeValidationError');
-          done()
+          symbol: 'AAPL'
         })
+          .then(function () {
+            expect.fail()
+            done()
+          })
+          .catch(function (err) {
+            expect(err['name']).to.be.equal('SequelizeValidationError')
+            done()
+          })
       })
     })
   })
 
-
   describe('Associations', () => {
-    let user;
+    let user
     beforeEach(async () => {
       user = await User.create({
         name: 'james',
@@ -111,38 +117,39 @@ describe('Models', () => {
       })
     })
 
-    it("transaction belongs to a user", async () => {
+    it('transaction belongs to a user', async () => {
       const transaction = await Transaction.create({
-        symbol: "GOOG",
-        quantity: "10",
-        price: "140600"
-      });
+        symbol: 'GOOG',
+        quantity: '10',
+        price: '140600'
+      })
 
       // this method `setUser` automatically exists if you set up the association correctly
-      await transaction.setUser(user);
+      await transaction.setUser(user)
 
-      const foundTransaction = await Transaction.findByPk(1, {include: { model: User }})
+      const foundTransaction = await Transaction.findByPk(1, {
+        include: { model: User }
+      })
 
-      expect(foundTransaction.user).to.exist;
-      expect(foundTransaction.user.name).to.equal('james');
+      expect(foundTransaction.user).to.exist
+      expect(foundTransaction.user.name).to.equal('james')
+    })
 
-    });
-
-    it("portfolio belongs to a user", async () => {
+    it('portfolio belongs to a user', async () => {
       const portfolio = await Portfolio.create({
         symbol: 'GOOG',
         quantity: '10'
       })
 
       // this method `setUser` automatically exists if you set up the association correctly
-      await portfolio.setUser(user);
+      await portfolio.setUser(user)
 
-      const foundArticle = await Portfolio.findByPk(1, {include: { model: User }})
+      const foundArticle = await Portfolio.findByPk(1, {
+        include: { model: User }
+      })
 
-      expect(foundArticle.user).to.exist;
-      expect(foundArticle.user.name).to.equal('james');
-
-    });
-
-  });
+      expect(foundArticle.user).to.exist
+      expect(foundArticle.user.name).to.equal('james')
+    })
+  })
 })

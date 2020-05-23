@@ -9,7 +9,26 @@
     "start-server": "nodemon server --ignore public --ignore client",
     "start-dev": "NODE_ENV='development' npm run build-client-watch & NODE_ENV='development' npm run start-server",
     "seed": "node script/seed.js",
-    "test": "NODE_ENV='test' mocha \"./server/**/*.spec.js\" \"./client/**/*.spec.js\" --require @babel/register"
+    "test": "NODE_ENV='test' mocha \"./server/**/*.spec.js\" \"./client/**/*.spec.js\" --require @babel/register",
+    "lint": "eslint ./ --ignore-path .gitignore",
+    "lint-fix": "npm run lint -- --fix",
+    "prettify": "prettier --write \"**/*.{js,jsx,json,css,scss,md}\""
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,jsx}": [
+      "prettier --write",
+      "npm run lint-fix",
+      "git add"
+    ],
+    "*.{css,scss,json,md}": [
+      "prettier --write",
+      "git add"
+    ]
   },
   "keywords": [],
   "author": "",
@@ -44,6 +63,12 @@
     "@babel/preset-react": "^7.9.4",
     "@babel/register": "^7.9.0",
     "babel-loader": "^8.1.0",
+    "eslint": "^7.1.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-react": "^7.20.0",
+    "husky": "^4.2.5",
+    "lint-staged": "^10.2.6",
+    "prettier": "2.0.5",
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.11"
   }
