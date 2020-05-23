@@ -4,6 +4,7 @@ import { gettingTransactions } from '../store/transaction-store'
 import { StyledTableContainer } from '../themes/StyledTableContainer'
 import getDateOnly from '../../utils/get-date-only'
 import convertToUSD from '../../utils/convert-to-usd';
+import Loading from './Loading';
 
 export class transactions extends Component {
 
@@ -14,18 +15,18 @@ export class transactions extends Component {
     return (
       <StyledTableContainer>
         <h1>Transactions</h1>
-        <table>
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Transaction ID</th>
-              <th>Symbol</th>
-              <th>Price</th>
-              <th>Quantity</th>
-              <th>Net Cash</th>
-            </tr>
-          </thead>
-          {this.props.transactions.length ?
+        {this.props.transactions.length ?
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Transaction ID</th>
+                <th>Symbol</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Net Cash</th>
+              </tr>
+            </thead>
             <tbody>
               {this.props.transactions.map(txn =>
                 <tr key={txn.id}>
@@ -34,11 +35,11 @@ export class transactions extends Component {
                   <td>{txn.symbol}</td>
                   <td>{convertToUSD(txn.price / 100)}</td>
                   <td>{txn.quantity}</td>
-                  <td>{convertToUSD(- txn.quantity * txn.price / 100 )}</td>
+                  <td>{convertToUSD(- txn.quantity * txn.price / 100)}</td>
                 </tr>
               )}
-            </tbody> : null}
-        </table>
+            </tbody>
+        </table>:<Loading/>}
       </StyledTableContainer >
     )
   }

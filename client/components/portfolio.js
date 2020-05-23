@@ -4,7 +4,7 @@ import { gettingPortfolio } from '../store/portfolio-store'
 import styled from 'styled-components'
 import { StyledTableContainer } from '../themes/StyledTableContainer'
 import convertToUSD from '../../utils/convert-to-usd';
-
+import Loading from './Loading'
 
 const StyledPftContainer = styled(StyledTableContainer)`
   min-width: 300px;
@@ -20,16 +20,16 @@ export class Portfolio extends Component {
     return (
       <StyledPftContainer>
         <h1>Portfolio</h1>
-        <table>
-          <thead>
-            <tr>
-              <th>Symbol</th>
-              <th>Price</th>
-              <th>Quantity</th>
-              <th>Market Value</th>
-            </tr>
-          </thead>
-          {this.props.portfolio.length ?
+        {this.props.portfolio.length ?
+          <table>
+            <thead>
+              <tr>
+                <th>Symbol</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Market Value</th>
+              </tr>
+            </thead>
             <tbody>
               {this.props.portfolio.map(item =>
                 <tr key={item.id}>
@@ -39,9 +39,9 @@ export class Portfolio extends Component {
                   <td>{convertToUSD(item.mv)}</td>
                 </tr>
               )}
-            </tbody> : null}
-
+            </tbody>
         </table>
+        : <Loading />}
       </StyledPftContainer >
     )
   }
