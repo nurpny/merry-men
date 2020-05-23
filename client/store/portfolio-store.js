@@ -23,15 +23,24 @@ export const updatePortfolio = pftItem => ({
 export const gettingPortfolio = () => async dispatch => {
   try {
     // get the portfolio data from the server
-    let { data } = await axios.get(`/api/portfolio/`)
+    let pftData = await axios.get(`/api/portfolio/`)
 
-    // enrich the portfolio data from IEX
-    await Promise.all(data.map(async pftItem => {
-      let { data } = await axios.get(`https://cloud.iexapis.com/stable/stock/${pftItem.symbol}/quote/latestPrice?token=${IEX_PUBLIC_KEY}`)
-      pftItem.price = Math.round(data * 100)
-      pftItem.mv = pftItem.price * pftItem.quantity
-    }))
-    dispatch(getPortfolio(data))
+    // enrich the portfolio data with data from IEX
+    // turn portfolio data to a chained string of symbols
+    let symStr = pftData.data.map(item => item.symbol).join(",")
+
+    let iexData = await axios.get(`https://cloud.iexapis.com/stable/stock/market/batch?symbols=${symStr}&types=quote&token=${IEX_PUBLIC_KEY}`);
+
+    let enrichedPftData = pftData.data.map(pftItem => {
+      return {
+        ...pftItem,
+        price: Math.round(iexData.data[pftItem.symbol].quote.latestPrice * 100),
+        mv: Math.round(pftItem.quantity * iexData.data[pftItem.symbol].quote.latestPrice * 100),
+        openPrice: Math.round(iexData.data[pftItem.symbol].quote.open * 100)
+      }
+    })
+
+    dispatch(getPortfolio(enrichedPftData))
 
   } catch (err) {
     console.error(err)

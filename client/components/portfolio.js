@@ -9,8 +9,28 @@ import Loading from './Loading'
 const StyledPftContainer = styled(StyledTableContainer)`
   min-width: 300px;
   width: 400px;
+  h1 {
+    margin-bottom: 0px;
+  }
 `
+const StyledSummary = styled.section`
+  align-self: flex-end;
+  padding-bottom: 5px;
+  span {
+    font-weight: bold;
+  }
+`
+const StyledSpan = styled.span`
+  color: ${props => props.inputColor};
+`
+
 export class Portfolio extends Component {
+
+  chooseColor(pftItem) {
+    if (pftItem.price > pftItem.openPrice) return "green"
+    else if (pftItem.price < pftItem.openPrice) return "red"
+    else return "grey"
+  }
 
   componentDidMount() {
     this.props.onLoad(this.props.user.id);
@@ -18,31 +38,41 @@ export class Portfolio extends Component {
 
   render() {
     return (
-      <StyledPftContainer>
-        <h1>Portfolio</h1>
+      <div>
         {this.props.portfolio.length ?
-          <table>
-            <thead>
-              <tr>
-                <th>Symbol</th>
-                <th>Price</th>
-                <th>Quantity</th>
-                <th>Market Value</th>
-              </tr>
-            </thead>
-            <tbody>
-              {this.props.portfolio.map(item =>
-                <tr key={item.id}>
-                  <td>{item.symbol}</td>
-                  <td>{convertToUSD(item.price)}</td>
-                  <td>{item.quantity}</td>
-                  <td>{convertToUSD(item.mv)}</td>
+          <StyledPftContainer>
+            <h1>Portfolio</h1>
+            <StyledSummary>
+              Cash Available: <span>{convertToUSD(this.props.user.cash)}</span>
+            </StyledSummary>
+            <StyledSummary>
+              Total Portfolio Value: <span>{convertToUSD(this.props.portfolio.reduce((acc, pftItem) => acc + pftItem.mv, 0) + this.props.user.cash)}</span>
+            </StyledSummary>
+            <table>
+              <thead>
+                <tr>
+                  <th>Symbol</th>
+                  <th>Price</th>
+                  <th>Quantity</th>
+                  <th>Market Value</th>
                 </tr>
-              )}
-            </tbody>
-        </table>
-        : <Loading />}
-      </StyledPftContainer >
+              </thead>
+              <tbody>
+                {this.props.portfolio.map(item =>
+                  <tr key={item.id}>
+                    <td>{item.symbol}</td>
+                    <td><StyledSpan inputColor={this.chooseColor(item)}>{convertToUSD(item.price)}</StyledSpan></td>
+                    <td>{item.quantity}</td>
+                    <td>{convertToUSD(item.mv)}</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </StyledPftContainer >
+          : <Loading />
+        }
+      </div>
+
     )
   }
 }
