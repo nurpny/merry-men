@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { LOGIN_ERROR, SIGNUP_ERROR } from './error-reducer'
+import { LOGIN_ERROR, SIGNUP_ERROR } from './error-store'
 
 
 // Action Types

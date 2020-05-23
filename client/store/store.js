@@ -3,7 +3,7 @@ import thunkMiddleware from 'redux-thunk'
 import user from './user-store'
 import portfolio from './portfolio-store'
 import transactions from './transaction-store'
-import error from './error-reducer'
+import error from './error-store'
 
 const middlewares = [thunkMiddleware];
 if (process.env.NODE_ENV === `development`) {

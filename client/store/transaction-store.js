@@ -2,7 +2,7 @@ import axios from 'axios'
 import { IEX_PUBLIC_KEY } from './store'
 import { gettingPortfolio, updatePortfolio } from './portfolio-store'
 import { getUser } from './user-store'
-import { BUYSELL_ERROR } from './error-reducer'
+import { BUYSELL_ERROR } from './error-store'
 
 // Action Types
 const GET_TRANSACTIONS = 'GET_TRANSACTION'
@@ -61,7 +61,7 @@ export const buyingSellingStock = (symbol, quantity, userCash, buySell, portfoli
   }
   try {
     // dispatch error if the user does not have enough cash
-    if (buySell === 'buy' && quantity * price * 100 > userCash) {
+    if (buySell === 'buy' && quantity * price > userCash) {
       return dispatch(buySellError("Not enough cash"));
     }
     // record the transaction

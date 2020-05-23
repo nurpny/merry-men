@@ -24,7 +24,6 @@ export default function errorReducer(state = defaultError, action) {
     // if the user logs out of system, all errors reset to default
     case REMOVE_USER:
       return defaultError;
-
   }
   return state;
 }
