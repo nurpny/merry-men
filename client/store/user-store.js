@@ -1,16 +1,37 @@
 import axios from 'axios'
+import { LOGIN_ERROR, SIGNUP_ERROR } from './error-reducer'
+
 
 // Action Types
-const GET_USER = 'GET_USER'
-const REMOVE_USER = 'REMOVE_USER'
+export const GET_USER = 'GET_USER'
+export const REMOVE_USER = 'REMOVE_USER'
+
 
 // Initial State
 const defaultUser = {}
 
-// Action Creators
-export const getUser = user => ({type: GET_USER, user})
-const removeUser = () => ({type: REMOVE_USER})
 
+// Action Creators
+export const getUser = user => ({
+  type: GET_USER,
+  user: user,
+  loginError: null,  //clear any login/signup error previously triggered
+  signUpError: null
+})
+
+export const removeUser = () => ({
+  type: REMOVE_USER
+})
+
+const loginError = errMsg => ({
+  type: LOGIN_ERROR,
+  loginError: errMsg
+})
+
+const signUpError = errMsg => ({
+  type: SIGNUP_ERROR,
+  signUpError: errMsg
+})
 
 // Thunk Creators
 export const gettingSessionUser = () => async dispatch => {
@@ -27,7 +48,7 @@ export const loggingIn = (email, password) => async dispatch => {
   try {
     res = await axios.post(`/auth/login`, {email, password})
   } catch (authError) {
-    return dispatch(getUser({error: authError}))
+    return dispatch(loginError(authError.response.data))
   }
   try {
     dispatch(getUser(res.data))
@@ -40,9 +61,8 @@ export const signingUp = (name, email, password) => async dispatch => {
   let res
   try {
     res = await axios.post(`/auth/signup`, {name, email, password})
-
   } catch (authError) {
-    return dispatch(getUser({error: authError}))
+    return dispatch(signUpError(authError.response.data))
   }
   try {
     dispatch(getUser(res.data))

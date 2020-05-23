@@ -24,13 +24,14 @@ export const signup = (props) => {
       <div>  <input name="email" placeholder="Email" type="email" onChange={handleChange} required='required'></input> </div>
       <div> <input name="password" placeholder="Password" type="password" onChange={handleChange} required='required'></input> </div>
       <button type="submit">Create Your Account</button>
-    <div>{props.user.error && props.user.error.response.data}</div>
+    <div>{props.error && props.error}</div>
     </StyledFormContainer >
   )
 }
 
 const mapStateToProps = (state) => ({
-  user: state.user
+  user: state.user,
+  error: state.error.signup
 })
 
 const mapDispatchToProps = (dispatch) => ({

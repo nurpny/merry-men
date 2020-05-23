@@ -24,7 +24,7 @@ export const signin = (props) => {
       <div>  <input name="email" placeholder="Email" type="email" onChange={handleChange} required='required'></input> </div>
       <div> <input name="password" placeholder="Password" type="password" onChange={handleChange} required='required'></input> </div>
       <button type="submit">Sign In</button>
-      {props.user.error && <div>Incorrect email and/or password</div>}
+      {props.error && <div>Incorrect email and/or password</div>}
       <div>If you have not signed up for our services yet, click <Link to='/signup'>here</Link> to sign up.</div>
     </StyledFormContainer >
   )
@@ -32,7 +32,7 @@ export const signin = (props) => {
 
 const mapStateToProps = (state) => ({
   user: state.user,
-  error: state.user.error
+  error: state.error.login
 })
 
 const mapDispatchToProps = (dispatch) => ({
