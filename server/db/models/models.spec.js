@@ -5,9 +5,6 @@ describe('Models', () => {
   beforeEach(() => {
     return db.sync({ force: true })
   })
-  after(() => {
-    return db.close({ force: true })
-  })
 
   describe('User model', () => {
     describe('validation errors', () => {

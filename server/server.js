@@ -9,10 +9,15 @@ const SequelizeStore = require('connect-session-sequelize')(session.Store)
 const { db } = require('./db/index')
 const sessionStore = new SequelizeStore({ db })
 
-// This is a global Mocha hook, used for resource cleanup.
+// a global mocha hook used for resource cleanup.
 // Otherwise, Mocha v4+ never quits after tests.
 if (process.env.NODE_ENV === 'test') {
   after('close the session store', () => sessionStore.stopExpiringSessions())
+}
+
+// global mocha hook for resource cleanup
+if (process.env.NODE_ENV === 'test') {
+  after('close database connection', () => db.close())
 }
 
 // .env file used to keep secrets
@@ -50,7 +55,7 @@ app.use(compression())
 // session middleware and passport initiation
 app.use(
   session({
-    secret: process.env.SESSION_SECRET,
+    secret: process.env.SESSION_SECRET || 'EnterAnySecret',
     store: sessionStore,
     resave: false,
     saveUninitialized: false,
