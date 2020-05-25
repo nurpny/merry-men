@@ -31,7 +31,15 @@ export class Portfolio extends Component {
   }
 
   componentDidMount() {
-    this.props.onLoad(this.props.user.id);
+    this.props.onLoad();
+    // after the initial load, the prices will be refreshed every 30 seconds;
+    this.timer = setInterval(() => {
+      this.props.onLoad();
+    }, 10000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timer);
   }
 
   render() {
