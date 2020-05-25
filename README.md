@@ -12,7 +12,7 @@ Transaction view displays user's transactions from the latest.
 
 Client: React, Redux, Styled-Components\
 Server: Node, Express, PostgreSQL, Sequelize\
-Testing: Mocha, Chai, Supertest\
+Testing: Mocha, Chai, Supertest
 
 ## Deployed Site
 
@@ -35,3 +35,7 @@ Open http://localhost:8000 to view in browser.
 createdb NYCTTP-test
 npm run start-test
 ```
+
+## Phase 2
+App is built using free plans offered by IEX Cloud, which allows upto 50k messages/mo, and prices for user's portfolio is set to be refreshed every 5 minutes.
+In phase 2 of the project, SSE Streaming is to be established for real-time streaming of prices.
