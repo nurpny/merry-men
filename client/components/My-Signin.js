@@ -5,9 +5,13 @@ import { StyledFormContainer } from '../themes/StyledFormContainer'
 import { Link } from 'react-router-dom'
 
 export const signin = (props) => {
-  const [userInput, setUserInput] = useReducer((state, newState) => ({
-    ...state, ...newState
-  }), { email: "", password: "" })
+  const [userInput, setUserInput] = useReducer(
+    (state, newState) => ({
+      ...state,
+      ...newState
+    }),
+    { email: '', password: '' }
+  )
 
   const handleSubmit = (evt) => {
     evt.preventDefault()
@@ -21,12 +25,33 @@ export const signin = (props) => {
   return (
     <StyledFormContainer onSubmit={handleSubmit}>
       <h1>Sign In </h1>
-      <div>  <input name="email" placeholder="Email" type="email" onChange={handleChange} required='required'></input> </div>
-      <div> <input name="password" placeholder="Password" type="password" onChange={handleChange} required='required'></input> </div>
+      <div>
+        {' '}
+        <input
+          name="email"
+          placeholder="Email"
+          type="email"
+          onChange={handleChange}
+          required="required"
+        ></input>{' '}
+      </div>
+      <div>
+        {' '}
+        <input
+          name="password"
+          placeholder="Password"
+          type="password"
+          onChange={handleChange}
+          required="required"
+        ></input>{' '}
+      </div>
       <button type="submit">Sign In</button>
       {props.error && <div>Incorrect email and/or password</div>}
-      <div>If you have not signed up for our services yet, click <Link to='/signup'>here</Link> to sign up.</div>
-    </StyledFormContainer >
+      <div>
+        If you have not signed up for our services yet, click{' '}
+        <Link to="/signup">here</Link> to sign up.
+      </div>
+    </StyledFormContainer>
   )
 }
 
