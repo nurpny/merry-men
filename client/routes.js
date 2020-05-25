@@ -1,14 +1,14 @@
-import { Route, Switch } from 'react-router-dom'
-import React, { Component } from 'react'
-import Signup from './components/Signup'
-import Signin from './components/Signin'
-import MyAccount from './components/MyAccount'
-import { gettingSessionUser } from './store/user-store'
-import { connect } from 'react-redux'
+import { Route, Switch } from 'react-router-dom';
+import React, { Component } from 'react';
+import Signup from './components/Signup';
+import Signin from './components/Signin';
+import MyAccount from './components/MyAccount';
+import { gettingSessionUser } from './store/user-store';
+import { connect } from 'react-redux';
 
 class Routes extends Component {
   componentDidMount() {
-    this.props.gettingSessionUser()
+    this.props.gettingSessionUser();
   }
 
   render() {
@@ -26,16 +26,16 @@ class Routes extends Component {
           </Switch>
         )}
       </div>
-    )
+    );
   }
 }
 
 const mapStateToProps = (state) => ({
   user: state.user
-})
+});
 
 const mapDispatchToProps = (dispatch) => ({
   gettingSessionUser: () => dispatch(gettingSessionUser())
-})
+});
 
-export default connect(mapStateToProps, mapDispatchToProps)(Routes)
+export default connect(mapStateToProps, mapDispatchToProps)(Routes);

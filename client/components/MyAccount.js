@@ -1,34 +1,34 @@
-import React, { useState } from 'react'
-import { connect } from 'react-redux'
-import styled from 'styled-components'
-import Transactions from './Transactions'
-import Portfolio from './Portfolio'
-import BuySell from './BuySell'
-import { loggingOut } from '../store/user-store.js'
+import React, { useState } from 'react';
+import { connect } from 'react-redux';
+import styled from 'styled-components';
+import Transactions from './Transactions';
+import Portfolio from './Portfolio';
+import BuySell from './BuySell';
+import { loggingOut } from '../store/user-store.js';
 
 const StyledMenuContainer = styled.section`
   display: flex;
   justify-content: flex-end;
-`
+`;
 const StyledMenu = styled.section`
   color: ${(props) => props.theme.colors.blue};
   cursor: pointer;
   margin: 20px 10px;
-`
+`;
 
 const StyledMenuBorder = styled.section`
   color: ${(props) => props.theme.colors.blue};
   margin: 20px 10px;
-`
+`;
 
 const PortfolioContainer = styled.section`
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
-`
+`;
 
 export const MyAccount = (props) => {
-  const [showTransactions, setShowTransactions] = useState(false)
+  const [showTransactions, setShowTransactions] = useState(false);
 
   return (
     <div>
@@ -52,11 +52,11 @@ export const MyAccount = (props) => {
       )}
       {showTransactions && <Transactions />}
     </div>
-  )
-}
+  );
+};
 
 const mapDispatchToProps = (dispatch) => ({
   loggingOut: () => dispatch(loggingOut())
-})
+});
 
-export default connect(null, mapDispatchToProps)(MyAccount)
+export default connect(null, mapDispatchToProps)(MyAccount);

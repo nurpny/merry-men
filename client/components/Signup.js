@@ -1,7 +1,7 @@
-import React, { useReducer } from 'react'
-import { connect } from 'react-redux'
-import { signingUp } from '../store/user-store'
-import { StyledFormContainer } from '../themes/StyledFormContainer'
+import React, { useReducer } from 'react';
+import { connect } from 'react-redux';
+import { signingUp } from '../store/user-store';
+import { StyledFormContainer } from '../themes/StyledFormContainer';
 
 export const SignUp = (props) => {
   const [userInput, setUserInput] = useReducer(
@@ -10,21 +10,21 @@ export const SignUp = (props) => {
       ...newState
     }),
     { name: '', email: '', password: '' }
-  )
+  );
 
   const handleSubmit = async (evt) => {
-    evt.preventDefault()
+    evt.preventDefault();
     await props.signingUp(
       userInput.name,
       userInput.email,
       userInput.password,
       props.history
-    )
-  }
+    );
+  };
 
   const handleChange = (evt) => {
-    setUserInput({ [evt.target.name]: evt.target.value })
-  }
+    setUserInput({ [evt.target.name]: evt.target.value });
+  };
 
   return (
     <StyledFormContainer onSubmit={handleSubmit}>
@@ -62,17 +62,17 @@ export const SignUp = (props) => {
       <button type="submit">Create Your Account</button>
       <div>{props.error && props.error}</div>
     </StyledFormContainer>
-  )
-}
+  );
+};
 
 const mapStateToProps = (state) => ({
   user: state.user,
   error: state.error.signUp
-})
+});
 
 const mapDispatchToProps = (dispatch) => ({
   signingUp: (name, email, password, history) =>
     dispatch(signingUp(name, email, password, history))
-})
+});
 
-export default connect(mapStateToProps, mapDispatchToProps)(SignUp)
+export default connect(mapStateToProps, mapDispatchToProps)(SignUp);

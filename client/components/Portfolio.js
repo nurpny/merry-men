@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { gettingPortfolio } from '../store/portfolio-store'
-import styled from 'styled-components'
-import { StyledTableContainer } from '../themes/StyledTableContainer'
-import convertToUSD from '../../utils/convert-to-usd'
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { gettingPortfolio } from '../store/portfolio-store';
+import styled from 'styled-components';
+import { StyledTableContainer } from '../themes/StyledTableContainer';
+import convertToUSD from '../../utils/convert-to-usd';
 
 const StyledPftContainer = styled(StyledTableContainer)`
   min-width: 300px;
@@ -11,27 +11,27 @@ const StyledPftContainer = styled(StyledTableContainer)`
   h1 {
     margin-bottom: 0px;
   }
-`
+`;
 const StyledSummary = styled.section`
   align-self: flex-end;
   padding-bottom: 5px;
   span {
     font-weight: bold;
   }
-`
+`;
 const StyledSpan = styled.span`
   color: ${(props) => props.inputColor};
-`
+`;
 
 export class Portfolio extends Component {
   chooseColor(pftItem) {
-    if (pftItem.price > pftItem.openPrice) return 'green'
-    else if (pftItem.price < pftItem.openPrice) return 'red'
-    else return 'grey'
+    if (pftItem.price > pftItem.openPrice) return 'green';
+    else if (pftItem.price < pftItem.openPrice) return 'red';
+    else return 'grey';
   }
 
   componentDidMount() {
-    this.props.onLoad(this.props.user.id)
+    this.props.onLoad(this.props.user.id);
   }
 
   render() {
@@ -79,17 +79,17 @@ export class Portfolio extends Component {
           ) : null}
         </table>
       </StyledPftContainer>
-    )
+    );
   }
 }
 
 const mapStateToProps = (state) => ({
   portfolio: state.portfolio,
   user: state.user
-})
+});
 
 const mapDispatchToProps = (dispatch) => ({
   onLoad: () => dispatch(gettingPortfolio())
-})
+});
 
-export default connect(mapStateToProps, mapDispatchToProps)(Portfolio)
+export default connect(mapStateToProps, mapDispatchToProps)(Portfolio);

@@ -1,13 +1,13 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { gettingTransactions } from '../store/transaction-store'
-import { StyledTableContainer } from '../themes/StyledTableContainer'
-import getDateOnly from '../../utils/get-date-only'
-import convertToUSD from '../../utils/convert-to-usd'
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { gettingTransactions } from '../store/transaction-store';
+import { StyledTableContainer } from '../themes/StyledTableContainer';
+import getDateOnly from '../../utils/get-date-only';
+import convertToUSD from '../../utils/convert-to-usd';
 
 export class transactions extends Component {
   componentDidMount() {
-    this.props.onLoad(this.props.user.id)
+    this.props.onLoad(this.props.user.id);
   }
   render() {
     return (
@@ -40,17 +40,17 @@ export class transactions extends Component {
           ) : null}
         </table>
       </StyledTableContainer>
-    )
+    );
   }
 }
 
 const mapStateToProps = (state) => ({
   transactions: state.transactions,
   user: state.user
-})
+});
 
 const mapDispatchToProps = (dispatch) => ({
   onLoad: () => dispatch(gettingTransactions())
-})
+});
 
-export default connect(mapStateToProps, mapDispatchToProps)(transactions)
+export default connect(mapStateToProps, mapDispatchToProps)(transactions);

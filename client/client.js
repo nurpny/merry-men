@@ -1,12 +1,12 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-import { Provider } from 'react-redux'
-import { BrowserRouter } from 'react-router-dom'
-import store from './store/store'
-import Routes from './routes'
-import { ThemeProvider } from 'styled-components'
-import { GlobalStyle } from './themes/globalStyles'
-import { theme } from './themes/theme'
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
+import store from './store/store';
+import Routes from './routes';
+import { ThemeProvider } from 'styled-components';
+import { GlobalStyle } from './themes/globalStyles';
+import { theme } from './themes/theme';
 
 ReactDOM.render(
   <Provider store={store}>
@@ -18,4 +18,4 @@ ReactDOM.render(
     </BrowserRouter>
   </Provider>,
   document.getElementById('app')
-)
+);

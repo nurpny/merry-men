@@ -1,58 +1,58 @@
-import { expect } from 'chai'
+import { expect } from 'chai';
 
-import { GET_USER } from './user-store'
-import { GET_PORTFOLIO, gettingPortfolio } from './portfolio-store'
+import { GET_USER } from './user-store';
+import { GET_PORTFOLIO, gettingPortfolio } from './portfolio-store';
 import {
   GET_TRANSACTIONS,
   ADD_TRANSACTION,
   gettingTransactions,
   buyingSellingStock
-} from './transaction-store'
-import { BUYSELL_ERROR } from './error-store'
-import { IEX_PUBLIC_KEY } from './store'
+} from './transaction-store';
+import { BUYSELL_ERROR } from './error-store';
+import { IEX_PUBLIC_KEY } from './store';
 
-import axios from 'axios'
-import MockAxiosAdapter from 'axios-mock-adapter'
-import configureMockStore from 'redux-mock-store'
-import thunkMiddleware from 'redux-thunk'
+import axios from 'axios';
+import MockAxiosAdapter from 'axios-mock-adapter';
+import configureMockStore from 'redux-mock-store';
+import thunkMiddleware from 'redux-thunk';
 
-const middlewares = [thunkMiddleware]
-const mockStore = configureMockStore(middlewares)
+const middlewares = [thunkMiddleware];
+const mockStore = configureMockStore(middlewares);
 const initialState = {
   error: {},
   portfolio: [],
   transactions: [],
   user: {}
-}
+};
 
-import { testTransactions } from './actioncreators.spec'
-import { testPortfolio } from './actioncreators.spec'
+import { testTransactions } from './actioncreators.spec';
+import { testPortfolio } from './actioncreators.spec';
 
 describe('Thunk creators', () => {
   // check the actions dispatched by mocking the redux store
 
-  let mockAxios
-  let store
+  let mockAxios;
+  let store;
 
   beforeEach(() => {
-    mockAxios = new MockAxiosAdapter(axios)
-    store = mockStore(initialState) // create a new store for each test
-  })
+    mockAxios = new MockAxiosAdapter(axios);
+    store = mockStore(initialState); // create a new store for each test
+  });
 
   afterEach(() => {
-    mockAxios.reset()
-  })
+    mockAxios.reset();
+  });
 
   describe('gettingTransactions thunk creator', () => {
     it('dispatching gettingTransactions thunk results in dispatching a GET_TRANSACTIONS action', async () => {
-      mockAxios.onGet('/api/transactions').replyOnce(200, testTransactions)
+      mockAxios.onGet('/api/transactions').replyOnce(200, testTransactions);
       // mock axios will respond with status code 200 and transactions defined above
-      await store.dispatch(gettingTransactions())
-      const actions = store.getActions()
-      expect(actions[0].type).to.equal(GET_TRANSACTIONS)
-      expect(actions[0].transactions).to.deep.equal(testTransactions)
-    })
-  })
+      await store.dispatch(gettingTransactions());
+      const actions = store.getActions();
+      expect(actions[0].type).to.equal(GET_TRANSACTIONS);
+      expect(actions[0].transactions).to.deep.equal(testTransactions);
+    });
+  });
 
   describe('gettingPortfolio thunk creator', () => {
     // below is abbreviated version of data you can expect from iex api
@@ -73,7 +73,7 @@ describe('Thunk creators', () => {
           latestPrice: 429.32
         }
       }
-    }
+    };
 
     const expectedTestPortfolio = [
       {
@@ -94,73 +94,73 @@ describe('Thunk creators', () => {
         openPrice: 43698,
         price: 42932
       }
-    ]
+    ];
 
     it('dispatching gettingPortfolio thunk results in dispatching a GET_PORTFOLIO action', async () => {
-      mockAxios.onGet('/api/portfolio').replyOnce(200, testPortfolio)
+      mockAxios.onGet('/api/portfolio').replyOnce(200, testPortfolio);
       // mockaxios will respond with status code 200 and transactions defined above
       mockAxios
         .onGet(
           `https://cloud.iexapis.com/stable/stock/market/batch?symbols=AAPL,NFLX&types=quote&token=${IEX_PUBLIC_KEY}`
         )
-        .replyOnce(200, testIexData)
-      await store.dispatch(gettingPortfolio())
-      const actions = store.getActions()
-      expect(actions[0].type).to.equal(GET_PORTFOLIO)
-      expect(actions[0].portfolio).to.deep.equal(expectedTestPortfolio)
-    })
-  })
+        .replyOnce(200, testIexData);
+      await store.dispatch(gettingPortfolio());
+      const actions = store.getActions();
+      expect(actions[0].type).to.equal(GET_PORTFOLIO);
+      expect(actions[0].portfolio).to.deep.equal(expectedTestPortfolio);
+    });
+  });
 
   describe('buyingSellingStock', () => {
     // check the actions dispatched by mocking the redux store
-    let mockAxios
-    let store
+    let mockAxios;
+    let store;
 
     beforeEach(() => {
-      mockAxios = new MockAxiosAdapter(axios)
-      store = mockStore(initialState) // create a new store for each test
-    })
+      mockAxios = new MockAxiosAdapter(axios);
+      store = mockStore(initialState); // create a new store for each test
+    });
 
     afterEach(() => {
-      mockAxios.reset()
-    })
+      mockAxios.reset();
+    });
 
     it('if the user does not own stocks the user wants to sell, it dispatches a buySellError', async () => {
       await store.dispatch(
         buyingSellingStock('SPOT', '1000', 10000, 'sell', testPortfolio)
-      )
-      const actions = store.getActions()
-      expect(actions[0].type).to.equal(BUYSELL_ERROR)
-      expect(actions[0].buySellError).to.equal('You do not own this stock')
-    })
+      );
+      const actions = store.getActions();
+      expect(actions[0].type).to.equal(BUYSELL_ERROR);
+      expect(actions[0].buySellError).to.equal('You do not own this stock');
+    });
 
     it('if the user enters an unknown ticker, it dispatches a buySellError', async () => {
       mockAxios
         .onGet(
           `https://cloud.iexapis.com/stable/stock/SPOTXXXX/quote/latestPrice?token=${IEX_PUBLIC_KEY}`
         )
-        .replyOnce(404)
+        .replyOnce(404);
       await store.dispatch(
         buyingSellingStock('SPOTXXXX', '1000', 10000, 'buy', testPortfolio)
-      )
-      const actions = store.getActions()
-      expect(actions[0].type).to.equal(BUYSELL_ERROR)
-      expect(actions[0].buySellError).to.equal('Unknown symbol')
-    })
+      );
+      const actions = store.getActions();
+      expect(actions[0].type).to.equal(BUYSELL_ERROR);
+      expect(actions[0].buySellError).to.equal('Unknown symbol');
+    });
 
     it("if the user wants to buy more stocks than the user's cash allows, it dispatches a buySellError", async () => {
       mockAxios
         .onGet(
           `https://cloud.iexapis.com/stable/stock/SPOT/quote/latestPrice?token=${IEX_PUBLIC_KEY}`
         )
-        .replyOnce(200, 190.17)
+        .replyOnce(200, 190.17);
       await store.dispatch(
         buyingSellingStock('SPOT', '1000', 2000, 'buy', testPortfolio)
-      )
-      const actions = store.getActions()
-      expect(actions[0].type).to.equal(BUYSELL_ERROR)
-      expect(actions[0].buySellError).to.equal('Not enough cash')
-    })
+      );
+      const actions = store.getActions();
+      expect(actions[0].type).to.equal(BUYSELL_ERROR);
+      expect(actions[0].buySellError).to.equal('Not enough cash');
+    });
 
     it("if the user buys stocks within the user's cash limits, it dispatches addTransaction & getUser actions and calls gettingPortfolio", async () => {
       // below is the response you'd expect from /api/transactions if the transaction was successful
@@ -170,7 +170,7 @@ describe('Thunk creators', () => {
         price: 19017,
         quantity: 10,
         userId: 1
-      }
+      };
 
       // below is the response you'd expect from /api/user if the transaction was successful
       const userRes = {
@@ -178,7 +178,7 @@ describe('Thunk creators', () => {
         name: 'jane',
         email: 'jane@email.com',
         cash: 190170
-      }
+      };
 
       // below is the response you'd expect from /api/portfolio if the transaction was successful
       const portfRes = [
@@ -191,35 +191,35 @@ describe('Thunk creators', () => {
           openPrice: 19200,
           price: 19017
         }
-      ]
+      ];
 
       // below is the abbreviation version of data you'd expect from iex api for SPOT
       const testIexData = {
         SPOT: {
           quote: { symbol: 'SPOT', open: 192, latestPrice: 190.17 }
         }
-      }
+      };
 
       mockAxios
         .onGet(
           `https://cloud.iexapis.com/stable/stock/SPOT/quote/latestPrice?token=${IEX_PUBLIC_KEY}`
         )
-        .replyOnce(200, 190.17)
-      mockAxios.onPost('/api/transactions').replyOnce(200, txnRes)
-      mockAxios.onPut('/api/portfolio').replyOnce(200)
-      mockAxios.onPut('/api/user').replyOnce(200, userRes)
-      mockAxios.onGet('/api/portfolio').replyOnce(200, portfRes)
+        .replyOnce(200, 190.17);
+      mockAxios.onPost('/api/transactions').replyOnce(200, txnRes);
+      mockAxios.onPut('/api/portfolio').replyOnce(200);
+      mockAxios.onPut('/api/user').replyOnce(200, userRes);
+      mockAxios.onGet('/api/portfolio').replyOnce(200, portfRes);
       mockAxios
         .onGet(
           `https://cloud.iexapis.com/stable/stock/market/batch?symbols=SPOT&types=quote&token=${IEX_PUBLIC_KEY}`
         )
-        .replyOnce(200, testIexData)
+        .replyOnce(200, testIexData);
 
       await store.dispatch(
         buyingSellingStock('SPOT', '10', 200000, 'buy', testPortfolio)
-      )
-      const actions = store.getActions()
-      expect(actions.length).to.equal(2)
+      );
+      const actions = store.getActions();
+      expect(actions.length).to.equal(2);
       expect(actions).to.deep.equal([
         {
           type: ADD_TRANSACTION,
@@ -238,7 +238,7 @@ describe('Thunk creators', () => {
           loginError: null,
           signUpError: null
         }
-      ])
-    })
-  })
-})
+      ]);
+    });
+  });
+});

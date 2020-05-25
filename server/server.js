@@ -1,27 +1,27 @@
-const express = require('express')
-const app = express()
-const path = require('path')
-const morgan = require('morgan')
-const compression = require('compression')
-const session = require('express-session')
-const passport = require('passport')
-const SequelizeStore = require('connect-session-sequelize')(session.Store)
-const { db } = require('./db/index')
-const sessionStore = new SequelizeStore({ db })
+const express = require('express');
+const app = express();
+const path = require('path');
+const morgan = require('morgan');
+const compression = require('compression');
+const session = require('express-session');
+const passport = require('passport');
+const SequelizeStore = require('connect-session-sequelize')(session.Store);
+const { db } = require('./db/index');
+const sessionStore = new SequelizeStore({ db });
 
 // a global mocha hook used for resource cleanup.
 // Otherwise, Mocha v4+ never quits after tests.
 if (process.env.NODE_ENV === 'test') {
-  after('close the session store', () => sessionStore.stopExpiringSessions())
+  after('close the session store', () => sessionStore.stopExpiringSessions());
 }
 
 // global mocha hook for resource cleanup
 if (process.env.NODE_ENV === 'test') {
-  after('close database connection', () => db.close())
+  after('close database connection', () => db.close());
 }
 
 // .env file used to keep secrets
-if (process.env.NODE_ENV !== 'production') require('dotenv').config()
+if (process.env.NODE_ENV !== 'production') require('dotenv').config();
 
 // passport registration: only the user ID is serialized to the session, keeping the amount of data stored within the session small. When subsequent requests are received, this ID is used to find the user, which will be restored to req.user
 
@@ -30,27 +30,27 @@ if (process.env.NODE_ENV !== 'production') require('dotenv').config()
 // deseserializeUser: makes a request to the DB to find the full profile information for the user then calls done(null, user) where the user profile is attached to the req handler at req.user
 
 passport.serializeUser((user, done) => {
-  done(null, user.id)
-})
+  done(null, user.id);
+});
 
 passport.deserializeUser(async (id, done) => {
   try {
-    const user = await db.models.user.findByPk(id)
-    done(null, user)
+    const user = await db.models.user.findByPk(id);
+    done(null, user);
   } catch (err) {
-    done(err)
+    done(err);
   }
-})
+});
 
 // logging middleware
-app.use(morgan('dev'))
+app.use(morgan('dev'));
 
 // bodyparsing middleware - parses req.body
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // compression middleware
-app.use(compression())
+app.use(compression());
 
 // session middleware and passport initiation
 app.use(
@@ -62,25 +62,25 @@ app.use(
     // cookie: { secure: true },
     maxAge: 600000
   })
-)
-app.use(passport.initialize())
-app.use(passport.session())
+);
+app.use(passport.initialize());
+app.use(passport.session());
 
 // serving static files in public folder
-app.use(express.static(path.join(__dirname, '..', 'public')))
+app.use(express.static(path.join(__dirname, '..', 'public')));
 
 // routes
-app.use('/api', require('./routes/api'))
-app.use('/auth', require('./routes/auth'))
+app.use('/api', require('./routes/api'));
+app.use('/auth', require('./routes/auth'));
 
 // otherwise serves index.html
 app.use('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'public/index.html'))
-})
+  res.sendFile(path.join(__dirname, '..', 'public/index.html'));
+});
 
 // error handling endware
 app.use((err, req, res) => {
-  res.status(err.status || 500).send(err.message || 'Internal server error')
-})
+  res.status(err.status || 500).send(err.message || 'Internal server error');
+});
 
-module.exports = { app, sessionStore }
+module.exports = { app, sessionStore };
