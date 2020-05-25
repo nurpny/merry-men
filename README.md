@@ -20,14 +20,18 @@ Testing: Mocha, Chai, Supertest
 
 You need to have PostgreSQL installed on your machine.
 
-> createdb NYCTTP
-> npm install
-> npm run seed
-> npm run start-dev
+```
+createdb NYCTTP
+npm install
+npm run seed
+npm run start-dev
+```
 
 Open http://localhost:8000 to view in browser.
 
 ## To run the Mocha tests
 
-> createdb NYCTTP-test
-> npm run start-test
+```
+createdb NYCTTP-test
+npm run start-test
+```
