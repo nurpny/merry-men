@@ -5,25 +5,25 @@ import { getUser } from './user-store'
 import { BUYSELL_ERROR } from './error-store'
 
 // Action Types
-const GET_TRANSACTIONS = 'GET_TRANSACTION'
+export const GET_TRANSACTIONS = 'GET_TRANSACTIONS'
 export const ADD_TRANSACTION = 'ADD_TRANSACTION'
 
 // Initial State
 const defaultTransactions = []
 
 // Action Creators
-const getTransactions = (transactions) => ({
+export const getTransactions = (transactions) => ({
   type: GET_TRANSACTIONS,
   transactions
 })
 
-const addTransaction = (transaction) => ({
+export const addTransaction = (transaction) => ({
   type: ADD_TRANSACTION,
   transaction,
   buySellError: null
 })
 
-const buySellError = (errMsg) => ({
+export const buySellError = (errMsg) => ({
   type: BUYSELL_ERROR,
   buySellError: errMsg
 })
@@ -32,7 +32,7 @@ const buySellError = (errMsg) => ({
 export const gettingTransactions = () => async (dispatch) => {
   try {
     // get the transaction data from the server
-    let { data } = await axios.get(`/api/transactions/`)
+    let { data } = await axios.get(`/api/transactions`)
     dispatch(getTransactions(data))
   } catch (err) {
     console.error(err)
@@ -76,13 +76,13 @@ export const buyingSellingStock = (
       return dispatch(buySellError('Not enough cash'))
     }
     // record the transaction
-    let newTxn = await axios.post(`/api/transactions/`, {
+    let newTxn = await axios.post(`/api/transactions`, {
       symbol,
       price,
       quantity
     })
     // update the user's portfolio
-    await axios.put(`/api/portfolio/`, { symbol, quantity })
+    await axios.put(`/api/portfolio`, { symbol, quantity })
     // update user's cash
     let marketValue = quantity * price
     let user = await axios.put('/api/user', { marketValue })
@@ -96,7 +96,7 @@ export const buyingSellingStock = (
 }
 
 // Reducer
-export default function (state = defaultTransactions, action) {
+export default (state = defaultTransactions, action) => {
   switch (action.type) {
     case GET_TRANSACTIONS:
       return action.transactions

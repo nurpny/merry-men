@@ -6,10 +6,10 @@ export const LOGIN_ERROR = 'LOGIN_ERROR'
 export const SIGNUP_ERROR = 'SIGNUP_ERROR'
 
 // Initial State
-const defaultError = {};
+const defaultError = {}
 
 // Reducer
-export default function errorReducer(state = defaultError, action) {
+export default (state = defaultError, action) => {
   switch (action.type) {
     case BUYSELL_ERROR:
       return { ...state, buySell: action.buySellError }
@@ -23,7 +23,7 @@ export default function errorReducer(state = defaultError, action) {
       return { ...state, signup: action.signUpError }
     // if the user logs out of system, all errors reset to default
     case REMOVE_USER:
-      return defaultError;
+      return defaultError
   }
-  return state;
+  return state
 }
