@@ -25,6 +25,9 @@ export const gettingPortfolio = () => async (dispatch) => {
     // get the portfolio data from the server
     let pftData = await axios.get(`/api/portfolio`)
 
+    // if empty portfolio data, dispatch an empty list
+    if (!pftData.data.length) return dispatch(getPortfolio(pftData.data))
+
     // enrich the portfolio data with data from IEX
     // turn portfolio data to a chained string of symbols
     let symStr = pftData.data.map((item) => item.symbol).join(',')

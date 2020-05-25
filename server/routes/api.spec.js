@@ -111,7 +111,6 @@ describe('API routes', () => {
       const res = await authenticatedUser
         .post('/api/transactions')
         .send({ symbol: 'JPM', price: 89.44, quantity: 10 })
-      console.log(res.body)
       expect(res.status).to.equal(200)
       expect(res.body.symbol).to.equal('JPM')
       expect(res.body).to.be.an.instanceOf(Object)

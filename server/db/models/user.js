@@ -2,46 +2,48 @@ const crypto = require('crypto')
 const { DataTypes } = require('sequelize')
 const db = require('../db')
 
-const User = db.define('user', {
-  name: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    validate: {
-      notNull: true,
-      notEmpty: true
+const User = db.define(
+  'user',
+  {
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: true,
+        notEmpty: true
+      }
+    },
+    email: {
+      type: DataTypes.STRING,
+      unique: true,
+      allowNull: false,
+      validate: {
+        notNull: true,
+        notEmpty: true,
+        isEmail: true
+      }
+    },
+    password: {
+      type: DataTypes.STRING
+    },
+    salt: {
+      type: DataTypes.STRING
+    },
+    cash: {
+      type: DataTypes.INTEGER,
+      defaultValue: 5000 * 100
     }
   },
-  email: {
-    type: DataTypes.STRING,
-    unique: true,
-    allowNull: false,
-    validate: {
-      notNull: true,
-      notEmpty: true,
-      isEmail: true,
+  {
+    defaultScope: {
+      attributes: { exclude: ['password', 'salt'] }
     }
-  },
-  password: {
-    type: DataTypes.STRING,
-  },
-  salt: {
-    type: DataTypes.STRING,
-  },
-  cash: {
-    type: DataTypes.INTEGER,
-    defaultValue: 5000 * 100
   }
-}, {
-  defaultScope: {
-    attributes: { exclude: ['password', 'salt'] }
-  }
-}
 )
 
 User.addScope('includeEverything', {
   attributes: { include: ['password', 'salt'] }
 })
-
 
 // Instance methods
 User.prototype.correctPassword = function (candidatePwd) {
@@ -62,15 +64,17 @@ User.encryptPassword = function (userPassword, salt) {
 }
 
 User.verifyPassword = async function (userEmail, candidatePwd) {
-  const user = await this.scope('includeEverything').findOne({ where: { email: userEmail } })
+  const user = await this.scope('includeEverything').findOne({
+    where: { email: userEmail }
+  })
   if (user.correctPassword(candidatePwd)) {
-    let userJSON = { id: user.id, email: user.email }
+    let userJSON = { id: user.id, email: user.email, cash: user.cash }
     return userJSON
   }
 }
 
 // Hooks
-const setSaltPassword = user => {
+const setSaltPassword = (user) => {
   if (user.changed('password')) {
     user.salt = User.generateSalt()
     user.password = User.encryptPassword(user.password, user.salt)
@@ -78,10 +82,8 @@ const setSaltPassword = user => {
 }
 
 User.addHook('beforeCreate', 'beforeUpdate', setSaltPassword)
-User.beforeBulkCreate(users => {
+User.beforeBulkCreate((users) => {
   users.forEach(setSaltPassword)
 })
 
-
 module.exports = User
-
