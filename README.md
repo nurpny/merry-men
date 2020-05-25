@@ -10,9 +10,9 @@ Transaction view displays user's transactions from the latest.
 
 ## Technologies used
 
-Client: React, Redux, Styled-Components
-Server: Node, Express, PostgreSQL, Sequelize
-Testing: Mocha, Chai, Supertest
+Client: React, Redux, Styled-Components\
+Server: Node, Express, PostgreSQL, Sequelize\
+Testing: Mocha, Chai, Supertest\
 
 ## Deployed Site
 
