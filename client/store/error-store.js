@@ -18,9 +18,9 @@ export default (state = defaultError, action) => {
     case LOGIN_ERROR:
       return { ...state, login: action.loginError }
     case GET_USER:
-      return { ...state, login: action.loginError, signup: action.signUpError }
+      return { ...state, login: action.loginError, signUp: action.signUpError }
     case SIGNUP_ERROR:
-      return { ...state, signup: action.signUpError }
+      return { ...state, signUp: action.signUpError }
     // if the user logs out of system, all errors reset to default
     case REMOVE_USER:
       return defaultError

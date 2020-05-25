@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { signingUp } from '../store/user-store'
 import { StyledFormContainer } from '../themes/StyledFormContainer'
 
-export const signup = (props) => {
+export const SignUp = (props) => {
   const [userInput, setUserInput] = useReducer(
     (state, newState) => ({
       ...state,
@@ -67,7 +67,7 @@ export const signup = (props) => {
 
 const mapStateToProps = (state) => ({
   user: state.user,
-  error: state.error.signup
+  error: state.error.signUp
 })
 
 const mapDispatchToProps = (dispatch) => ({
@@ -75,4 +75,4 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(signingUp(name, email, password, history))
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(signup)
+export default connect(mapStateToProps, mapDispatchToProps)(SignUp)
