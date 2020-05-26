@@ -7,6 +7,10 @@ import { InputContainer } from '../themes/InputContainer';
 import { StyledInput } from '../themes/StyledInput';
 import { StyledButton } from '../themes/StyledButton';
 
+export const StyledContainer = styled.section`
+  width: 300px;
+  margin-bottom: 10px;
+`;
 export const StyledSection = styled.section`
   text-align: right;
   font-size: 0.9em;
@@ -34,7 +38,7 @@ export class Quote extends Component {
 
   render() {
     return (
-      <div>
+      <StyledContainer>
         <form onSubmit={this.handleSubmit} onReset={this.handleFormReset}>
           <InputContainer>
             <StyledInput
@@ -57,7 +61,7 @@ export class Quote extends Component {
         ) : (
           <StyledSection>Price pending...</StyledSection>
         )}
-      </div>
+      </StyledContainer>
     );
   }
 }

@@ -26,7 +26,8 @@ export const addTransaction = (transaction) => ({
 
 export const buySellError = (errMsg) => ({
   type: BUYSELL_ERROR,
-  buySellError: errMsg
+  buySellError: errMsg,
+  singleStock: {}
 });
 
 // Thunk Creators
@@ -44,17 +45,45 @@ export const buyingSellingStock = (
   symbol,
   quantity,
   userCash,
-  buySell
+  buySell,
+  portfolio
 ) => async (dispatch) => {
   symbol = symbol.toUpperCase();
   quantity =
     buySell === 'buy' ? parseInt(quantity, 10) : -parseInt(quantity, 10);
-
+  console.log(
+    'symbol',
+    symbol,
+    'quantity',
+    quantity,
+    'userCash',
+    userCash,
+    buySell,
+    'buySell',
+    portfolio,
+    'portfolio'
+  );
+  if (buySell === 'sell') {
+    // dispatch error if the user does not have enough stocks to sell in the user's portfolio
+    let [pftItem] = portfolio.filter((pftItem) => pftItem.symbol === symbol);
+    if (!pftItem) {
+      return dispatch(buySellError('You do not own this stock'));
+    } else if (pftItem.quantity < Math.abs(quantity)) {
+      return dispatch(buySellError('Not enough shares'));
+    }
+  }
+  let price;
   try {
-    // check the prices again to ensure that the user has enough cash for the latest price
+    // get the latest price again to ensure that it is within user's cash limits
+    price = await getLatestPrice(symbol);
+  } catch (unknownTickerError) {
+    // dispatch error if the ticker does not exist
+    return dispatch(buySellError('Unknown symbol'));
+  }
+  try {
     // dispatch error if the user does not have enough cash
-    let price = await getLatestPrice(symbol);
     if (buySell === 'buy' && quantity * price > userCash) {
+      console.log('LINE 75 NOT ENOUGH CASH');
       return dispatch(buySellError('Not enough cash'));
     }
     let [newTxn, user] = await updateDBs(symbol, price, quantity);

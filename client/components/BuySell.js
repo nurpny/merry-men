@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
@@ -18,42 +18,14 @@ const StyledButtonsContainer = styled.section`
 `;
 
 export const BuySell = (props) => {
-  // buy/sell buttons will be enabled only if buyValid/sellValid is true
-  const [buyValid, setBuyValid] = useState(false);
-  const [sellValid, setSellValid] = useState(false);
-
-  const validateBuy = () => {
-    // user cannot buy more of the stock than the cash limits
-    return (
-      props.singleStock.quantity &&
-      props.singleStock.price * props.singleStock.quantity < props.user.cash
-    );
-  };
-
-  const validateSell = () => {
-    // user cannot sell more of the stock than the user has in the portfolio
-    let availablePortfolio = props.portfolio.filter(
-      (pftItem) => pftItem.symbol === props.singleStock.symbol
-    );
-    return (
-      props.singleStock.quantity &&
-      availablePortfolio.length &&
-      props.singleStock.quantity <= availablePortfolio[0].quantity
-    );
-  };
-
-  useEffect(() => {
-    if (validateBuy()) setBuyValid(true);
-    if (validateSell()) setSellValid(true);
-  });
-
   const handleBuy = (evt) => {
     evt.preventDefault();
     props.onSubmit(
       props.singleStock.symbol,
       props.singleStock.quantity,
       props.user.cash,
-      'buy'
+      'buy',
+      props.portfolio
     );
   };
 
@@ -63,7 +35,8 @@ export const BuySell = (props) => {
       props.singleStock.symbol,
       props.singleStock.quantity,
       props.user.cash,
-      'sell'
+      'sell',
+      props.portfolio
     );
   };
 
@@ -74,28 +47,17 @@ export const BuySell = (props) => {
 
       <StyledButtonsContainer>
         <form onSubmit={handleBuy}>
-          <StyledButton
-            type="submit"
-            name="buy"
-            buttonColor="red"
-            disabled={!buyValid}
-          >
+          <StyledButton type="submit" name="buy" buttonColor="red">
             Buy
           </StyledButton>
         </form>
 
         <form onSubmit={handleSell}>
-          <StyledButton
-            type="submit"
-            name="sell"
-            buttonColor="green"
-            disabled={!sellValid}
-          >
+          <StyledButton type="submit" name="sell" buttonColor="green">
             Sell
           </StyledButton>
         </form>
       </StyledButtonsContainer>
-
       <div>{props.error.buySell && props.error.buySell}</div>
     </StyledDivContainer>
   );
@@ -109,8 +71,8 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  onSubmit: (symbol, quantity, userCash, buySell) =>
-    dispatch(buyingSellingStock(symbol, quantity, userCash, buySell))
+  onSubmit: (symbol, quantity, userCash, buySell, portfolio) =>
+    dispatch(buyingSellingStock(symbol, quantity, userCash, buySell, portfolio))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(BuySell);

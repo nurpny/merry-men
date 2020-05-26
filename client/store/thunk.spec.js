@@ -231,7 +231,8 @@ describe('Thunk creators', () => {
             quantity: 10,
             userId: 1
           },
-          buySellError: null
+          buySellError: null,
+          singleStock: {}
         },
         {
           type: GET_USER,

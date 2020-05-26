@@ -143,7 +143,8 @@ describe('Action creators', () => {
       expect(addTransaction(testTransaction)).to.be.deep.equal({
         type: ADD_TRANSACTION,
         transaction: testTransaction,
-        buySellError: null
+        buySellError: null,
+        singleStock: {}
       });
     });
   });
@@ -153,7 +154,8 @@ describe('Action creators', () => {
       const errorMsg = 'Not enough shares';
       expect(buySellError(errorMsg)).to.be.deep.equal({
         type: BUYSELL_ERROR,
-        buySellError: errorMsg
+        buySellError: errorMsg,
+        singleStock: {}
       });
     });
   });
