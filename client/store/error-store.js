@@ -1,6 +1,7 @@
 // Action Types
 import { ADD_TRANSACTION } from './transaction-store';
 import { GET_USER, REMOVE_USER } from './user-store';
+import { SELECT_STOCK } from './single-stock-store';
 export const BUYSELL_ERROR = 'BUY_SELL_ERROR';
 export const LOGIN_ERROR = 'LOGIN_ERROR';
 export const SIGNUP_ERROR = 'SIGNUP_ERROR';
@@ -11,6 +12,8 @@ const defaultError = {};
 // Reducer
 export default (state = defaultError, action) => {
   switch (action.type) {
+    case SELECT_STOCK:
+      return { ...state, buySell: action.buySellError };
     case BUYSELL_ERROR:
       return { ...state, buySell: action.buySellError };
     case ADD_TRANSACTION:

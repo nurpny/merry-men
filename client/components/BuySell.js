@@ -1,107 +1,116 @@
-import React, { useReducer, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { StyledFormContainer } from '../themes/StyledFormContainer';
+
+import { StyledDivContainer } from '../themes/StyledDivContainer';
 import { buyingSellingStock } from '../store/transaction-store';
+import { StyledButton } from '../themes/StyledButton';
 
-const StyledBuySellContainer = styled(StyledFormContainer)`
-  .buttons {
-    display: flex;
-  }
+import Quote from './Quote';
+import Quantity from './Quantity';
 
-  .buy {
-    color: ${(props) => props.theme.colors.green};
-    border-color: ${(props) => props.theme.colors.green};
-  }
-
-  .sell {
-    color: ${(props) => props.theme.colors.red};
-    border-color: ${(props) => props.theme.colors.red};
-  }
+const StyledButtonsContainer = styled.section`
+  margin: 20px 10px 10px 10px;
+  padding: 0px;
+  display: flex;
+  justify-content: space-around;
+  width: 200px;
 `;
 
 export const BuySell = (props) => {
-  const [userInput, setUserInput] = useReducer(
-    (state, newState) => ({
-      ...state,
-      ...newState
-    }),
-    { ticker: '', qty: 0 }
-  );
+  // buy/sell buttons will be enabled only if buyValid/sellValid is true
+  const [buyValid, setBuyValid] = useState(false);
+  const [sellValid, setSellValid] = useState(false);
 
-  // buyOrSell states determined by which button the user presses
-  const [buyOrSell, setBuyOrSell] = useState('');
-
-  const handleSubmit = (evt) => {
-    evt.preventDefault();
-    props.onSubmit(
-      userInput.ticker,
-      userInput.qty,
-      props.user.cash,
-      buyOrSell,
-      props.portfolio
+  const validateBuy = () => {
+    // user cannot buy more of the stock than the cash limits
+    return (
+      props.singleStock.quantity &&
+      props.singleStock.price * props.singleStock.quantity < props.user.cash
     );
   };
 
-  const handleChange = (evt) => {
-    setUserInput({ [evt.target.name]: evt.target.value });
+  const validateSell = () => {
+    // user cannot sell more of the stock than the user has in the portfolio
+    let availablePortfolio = props.portfolio.filter(
+      (pftItem) => pftItem.symbol === props.singleStock.symbol
+    );
+    return (
+      props.singleStock.quantity &&
+      availablePortfolio.length &&
+      props.singleStock.quantity <= availablePortfolio[0].quantity
+    );
   };
 
-  const handleClick = (evt) => {
-    setBuyOrSell(evt.target.name);
+  useEffect(() => {
+    if (validateBuy()) setBuyValid(true);
+    if (validateSell()) setSellValid(true);
+  });
+
+  const handleBuy = (evt) => {
+    evt.preventDefault();
+    props.onSubmit(
+      props.singleStock.symbol,
+      props.singleStock.quantity,
+      props.user.cash,
+      'buy'
+    );
+  };
+
+  const handleSell = (evt) => {
+    evt.preventDefault();
+    props.onSubmit(
+      props.singleStock.symbol,
+      props.singleStock.quantity,
+      props.user.cash,
+      'sell'
+    );
   };
 
   return (
-    <StyledBuySellContainer onSubmit={handleSubmit}>
-      <div>
-        {' '}
-        <input
-          name="ticker"
-          placeholder="Ticker"
-          type="text"
-          onChange={handleChange}
-          required="required"
-        ></input>{' '}
-      </div>
-      <div>
-        {' '}
-        <input
-          name="qty"
-          placeholder="Quantity"
-          type="number"
-          onChange={handleChange}
-          required="required"
-          min="1"
-          step="1"
-        ></input>{' '}
-      </div>
-      <div className="buttons">
-        <button type="submit" name="buy" className="buy" onClick={handleClick}>
-          Buy
-        </button>
-        <button
-          type="submit"
-          name="sell"
-          className="sell"
-          onClick={handleClick}
-        >
-          Sell
-        </button>
-      </div>
+    <StyledDivContainer>
+      <Quote />
+      <Quantity />
+
+      <StyledButtonsContainer>
+        <form onSubmit={handleBuy}>
+          <StyledButton
+            type="submit"
+            name="buy"
+            buttonColor="red"
+            disabled={!buyValid}
+          >
+            Buy
+          </StyledButton>
+        </form>
+
+        <form onSubmit={handleSell}>
+          <StyledButton
+            type="submit"
+            name="sell"
+            buttonColor="green"
+            disabled={!sellValid}
+          >
+            Sell
+          </StyledButton>
+        </form>
+      </StyledButtonsContainer>
+
       <div>{props.error.buySell && props.error.buySell}</div>
-    </StyledBuySellContainer>
+    </StyledDivContainer>
   );
 };
 
 const mapStateToProps = (state) => ({
   user: state.user,
   portfolio: state.portfolio,
-  error: state.error
+  error: state.error,
+  singleStock: state.singleStock
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  onSubmit: (symbol, quantity, userCash, buySell, portfolio) =>
-    dispatch(buyingSellingStock(symbol, quantity, userCash, buySell, portfolio))
+  onSubmit: (symbol, quantity, userCash, buySell) =>
+    dispatch(buyingSellingStock(symbol, quantity, userCash, buySell))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(BuySell);

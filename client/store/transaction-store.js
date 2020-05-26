@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { IEX_PUBLIC_KEY } from './store';
+import { getLatestPrice, updateDBs } from './thunk-utils';
 import { gettingPortfolio } from './portfolio-store';
 import { getUser } from './user-store';
 import { BUYSELL_ERROR } from './error-store';
@@ -20,37 +20,14 @@ export const getTransactions = (transactions) => ({
 export const addTransaction = (transaction) => ({
   type: ADD_TRANSACTION,
   transaction,
-  buySellError: null
+  buySellError: null,
+  singleStock: {}
 });
 
 export const buySellError = (errMsg) => ({
   type: BUYSELL_ERROR,
   buySellError: errMsg
 });
-
-// Thunk Utils
-export const getLatestPrice = async (symbol) => {
-  // for this app, assuming that buying/selling happens @ market price (rounded to nearest cent) instead of ask/bid. get the latest price from iex api
-  let { data } = await axios.get(
-    `https://cloud.iexapis.com/stable/stock/${symbol}/quote/latestPrice?token=${IEX_PUBLIC_KEY}`
-  );
-  return Math.round(data * 100);
-};
-
-export const updateDBs = async (symbol, price, quantity) => {
-  // record the transaction
-  let newTxn = await axios.post(`/api/transactions`, {
-    symbol,
-    price,
-    quantity
-  });
-  // update the user's portfolio
-  await axios.put(`/api/portfolio`, { symbol, quantity });
-  // update user's cash
-  let marketValue = quantity * price;
-  let user = await axios.put('/api/user', { marketValue });
-  return [newTxn.data, user.data];
-};
 
 // Thunk Creators
 export const gettingTransactions = () => async (dispatch) => {
@@ -67,31 +44,16 @@ export const buyingSellingStock = (
   symbol,
   quantity,
   userCash,
-  buySell,
-  portfolio
+  buySell
 ) => async (dispatch) => {
   symbol = symbol.toUpperCase();
   quantity =
     buySell === 'buy' ? parseInt(quantity, 10) : -parseInt(quantity, 10);
 
-  if (buySell === 'sell') {
-    // dispatch error if the user does not have enough stocks to sell in the user's portfolio
-    let [pftItem] = portfolio.filter((pftItem) => pftItem.symbol === symbol);
-    if (!pftItem) {
-      return dispatch(buySellError('You do not own this stock'));
-    } else if (pftItem.quantity < Math.abs(quantity)) {
-      return dispatch(buySellError('Not enough shares'));
-    }
-  }
-  let price;
   try {
-    price = await getLatestPrice(symbol);
-  } catch (unknownTickerError) {
-    // dispatch error if the ticker does not exist
-    return dispatch(buySellError('Unknown symbol'));
-  }
-  try {
+    // check the prices again to ensure that the user has enough cash for the latest price
     // dispatch error if the user does not have enough cash
+    let price = await getLatestPrice(symbol);
     if (buySell === 'buy' && quantity * price > userCash) {
       return dispatch(buySellError('Not enough cash'));
     }

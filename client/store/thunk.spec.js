@@ -5,10 +5,10 @@ import { GET_PORTFOLIO, gettingPortfolio } from './portfolio-store';
 import {
   GET_TRANSACTIONS,
   ADD_TRANSACTION,
-  getLatestPrice,
-  gettingTransactions,
-  buyingSellingStock
+  buyingSellingStock,
+  gettingTransactions
 } from './transaction-store';
+import { getLatestPrice } from './thunk-utils';
 import { BUYSELL_ERROR } from './error-store';
 import { IEX_PUBLIC_KEY } from './store';
 

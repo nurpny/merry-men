@@ -4,6 +4,7 @@ import user from './user-store';
 import portfolio from './portfolio-store';
 import transactions from './transaction-store';
 import error from './error-store';
+import singleStock from './single-stock-store';
 
 const middlewares = [thunkMiddleware];
 if (process.env.NODE_ENV === `development`) {
@@ -15,7 +16,8 @@ export const rootReducer = combineReducers({
   user,
   portfolio,
   transactions,
-  error
+  error,
+  singleStock
 });
 const store = compose(applyMiddleware(...middlewares))(createStore)(
   rootReducer
