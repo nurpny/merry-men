@@ -15,6 +15,7 @@ Server: Node, Express, PostgreSQL, Sequelize\
 Testing: Mocha, Chai, Supertest
 
 ## Deployed Site
+https://stocks-for-nycttp.herokuapp.com/
 
 ## To start the application in dev environment
 

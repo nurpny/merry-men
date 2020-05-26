@@ -1,19 +1,23 @@
 {
   "name": "NYCTTP",
   "version": "1.0.0",
-  "description": "",
+  "description": "a stock trading app for NYC Tech Talent Pipeline",
   "main": "index.js",
+  "engines": {
+    "node": "12.11.x"
+  },
   "scripts": {
     "build-client": "webpack",
     "build-client-watch": "webpack -w",
     "start-server": "nodemon server --ignore public --ignore client",
     "start-dev": "NODE_ENV='development' npm run build-client-watch & NODE_ENV='development' npm run start-server",
     "seed": "node script/seed.js",
-    "test-client": "NODE_ENV='test' mocha --require @babel/register --require @babel/polyfill \"./client/**/*.spec.js\" ",
     "test": "NODE_ENV='test' mocha --require @babel/register --require @babel/polyfill \"./server/**/*.spec.js\" \"./client/**/*.spec.js\" \"./utils/**/*.spec.js\"",
     "lint": "eslint ./ --ignore-path .gitignore",
     "lint-fix": "npm run lint -- --fix",
-    "prettify": "prettier --write \"**/*.{js,jsx,json,css,scss,md}\""
+    "prettify": "prettier --write \"**/*.{js,jsx,json,css,scss,md}\"",
+    "start": "node server/index.js",
+    "deploy": "script/deploy"
   },
   "husky": {
     "hooks": {
