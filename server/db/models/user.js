@@ -34,7 +34,10 @@ const User = db.define(
     },
     cash: {
       type: DataTypes.INTEGER,
-      defaultValue: 5000 * 100
+      defaultValue: 5000 * 100,
+      validate: {
+        min: 0
+      }
     }
   },
   {

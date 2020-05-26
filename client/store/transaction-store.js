@@ -28,6 +28,15 @@ export const buySellError = (errMsg) => ({
   buySellError: errMsg
 });
 
+// Thunk Utils
+const getLatestPrice = async (symbol) => {
+  // for this app, assuming that buying/selling happens @ market price (rounded to nearest cent) instead of ask/bid. get the latest price from iex api
+  let { data } = await axios.get(
+    `https://cloud.iexapis.com/stable/stock/${symbol}/quote/latestPrice?token=${IEX_PUBLIC_KEY}`
+  );
+  return Math.round(data * 100);
+};
+
 // Thunk Creators
 export const gettingTransactions = () => async (dispatch) => {
   try {
@@ -61,11 +70,7 @@ export const buyingSellingStock = (
   }
   let price;
   try {
-    // for this app, assuming that buying/selling happens @ market price (rounded to nearest cent) instead of ask/bid. get the latest price from iex api
-    let { data } = await axios.get(
-      `https://cloud.iexapis.com/stable/stock/${symbol}/quote/latestPrice?token=${IEX_PUBLIC_KEY}`
-    );
-    price = Math.round(data * 100);
+    price = await getLatestPrice(symbol);
   } catch (unknownTickerError) {
     // dispatch error if the ticker does not exist
     return dispatch(buySellError('Unknown symbol'));

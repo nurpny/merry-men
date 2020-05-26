@@ -106,8 +106,26 @@ describe('Models', () => {
   describe('Portfolio Model', () => {
     describe('validation errors', () => {
       it('throws an error if missing quantity', function (done) {
-        Transaction.create({
-          symbol: 'AAPL'
+        Portfolio.create({
+          symbol: 'AAPL',
+          userId: 1
+        })
+          .then(function () {
+            expect.fail();
+            done();
+          })
+          .catch(function (err) {
+            expect(err['name']).to.be.equal('SequelizeValidationError');
+            done();
+          });
+      });
+    });
+    describe('validation errors', () => {
+      it('throws an error if negative quantity', function (done) {
+        Portfolio.create({
+          symbol: 'AAPL',
+          userId: 1,
+          quantity: -500
         })
           .then(function () {
             expect.fail();
@@ -120,7 +138,6 @@ describe('Models', () => {
       });
     });
   });
-
   describe('Associations', () => {
     let user;
     beforeEach(async () => {
