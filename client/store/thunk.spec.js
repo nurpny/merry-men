@@ -5,6 +5,7 @@ import { GET_PORTFOLIO, gettingPortfolio } from './portfolio-store';
 import {
   GET_TRANSACTIONS,
   ADD_TRANSACTION,
+  getLatestPrice,
   gettingTransactions,
   buyingSellingStock
 } from './transaction-store';
@@ -239,6 +240,80 @@ describe('Thunk creators', () => {
           signUpError: null
         }
       ]);
+    });
+  });
+
+  describe('Thunks Utils functions', () => {
+    let mockAxios;
+
+    beforeEach(() => {
+      mockAxios = new MockAxiosAdapter(axios);
+    });
+
+    describe('getLatestPrice', () => {
+      it('if input is an unknown ticker, it throws an error', (done) => {
+        // mockAxios will respond with 404 status
+        mockAxios
+          .onGet(
+            `https://cloud.iexapis.com/stable/stock/SPOTXXXX/quote/latestPrice?token=${IEX_PUBLIC_KEY}`
+          )
+          .replyOnce(404);
+
+        getLatestPrice('SPOTXXXX')
+          .then(() => {
+            expect.fail();
+            done();
+          })
+          .catch((err) => {
+            expect(err.response.status).to.be.equal(404);
+            done();
+          });
+      });
+
+      it('if input is a known ticker, it returns the price in cents', async () => {
+        // mockAxios will respond with 200 status and a price
+        mockAxios
+          .onGet(
+            `https://cloud.iexapis.com/stable/stock/SPOT/quote/latestPrice?token=${IEX_PUBLIC_KEY}`
+          )
+          .replyOnce(200, 190.17);
+
+        let price = await getLatestPrice('SPOT');
+        expect(price).to.be.equal(19017);
+      });
+    });
+
+    describe('getLatestPrice', () => {
+      it('if input is an unknown ticker, it throws an error', (done) => {
+        // mockAxios will respond with 404 status
+        mockAxios
+          .onGet(
+            `https://cloud.iexapis.com/stable/stock/SPOTXXXX/quote/latestPrice?token=${IEX_PUBLIC_KEY}`
+          )
+          .replyOnce(404);
+
+        getLatestPrice('SPOTXXXX')
+          .then(() => {
+            expect.fail();
+            done();
+          })
+          .catch((err) => {
+            expect(err.response.status).to.be.equal(404);
+            done();
+          });
+      });
+
+      it('if input is a known ticker, it returns the price in cents', async () => {
+        // mockAxios will respond with 200 status and a price
+        mockAxios
+          .onGet(
+            `https://cloud.iexapis.com/stable/stock/SPOT/quote/latestPrice?token=${IEX_PUBLIC_KEY}`
+          )
+          .replyOnce(200, 190.17);
+
+        let price = await getLatestPrice('SPOT');
+        expect(price).to.be.equal(19017);
+      });
     });
   });
 });

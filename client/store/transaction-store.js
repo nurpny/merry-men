@@ -29,12 +29,27 @@ export const buySellError = (errMsg) => ({
 });
 
 // Thunk Utils
-const getLatestPrice = async (symbol) => {
+export const getLatestPrice = async (symbol) => {
   // for this app, assuming that buying/selling happens @ market price (rounded to nearest cent) instead of ask/bid. get the latest price from iex api
   let { data } = await axios.get(
     `https://cloud.iexapis.com/stable/stock/${symbol}/quote/latestPrice?token=${IEX_PUBLIC_KEY}`
   );
   return Math.round(data * 100);
+};
+
+export const updateDBs = async (symbol, price, quantity) => {
+  // record the transaction
+  let newTxn = await axios.post(`/api/transactions`, {
+    symbol,
+    price,
+    quantity
+  });
+  // update the user's portfolio
+  await axios.put(`/api/portfolio`, { symbol, quantity });
+  // update user's cash
+  let marketValue = quantity * price;
+  let user = await axios.put('/api/user', { marketValue });
+  return [newTxn.data, user.data];
 };
 
 // Thunk Creators
@@ -80,19 +95,9 @@ export const buyingSellingStock = (
     if (buySell === 'buy' && quantity * price > userCash) {
       return dispatch(buySellError('Not enough cash'));
     }
-    // record the transaction
-    let newTxn = await axios.post(`/api/transactions`, {
-      symbol,
-      price,
-      quantity
-    });
-    // update the user's portfolio
-    await axios.put(`/api/portfolio`, { symbol, quantity });
-    // update user's cash
-    let marketValue = quantity * price;
-    let user = await axios.put('/api/user', { marketValue });
-    dispatch(addTransaction(newTxn.data));
-    dispatch(getUser(user.data));
+    let [newTxn, user] = await updateDBs(symbol, price, quantity);
+    dispatch(addTransaction(newTxn));
+    dispatch(getUser(user));
     // update user's portfolio view with updated prices for all
     dispatch(gettingPortfolio());
   } catch (err) {
