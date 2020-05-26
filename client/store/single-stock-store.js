@@ -1,6 +1,5 @@
 import { getLatestPrice } from './thunk-utils';
 import { BUYSELL_ERROR } from './error-store';
-import { ADD_TRANSACTION } from './transaction-store';
 
 // Action Types
 export const SELECT_STOCK = 'SELECT_STOCK';
@@ -43,8 +42,6 @@ export default (state = defaultStock, action) => {
       return action.stock;
     case ADD_QUANTITY:
       return { ...state, quantity: action.quantity };
-    case ADD_TRANSACTION:
-      return action.singleStock;
     default:
       return state;
   }

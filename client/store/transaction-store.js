@@ -20,8 +20,7 @@ export const getTransactions = (transactions) => ({
 export const addTransaction = (transaction) => ({
   type: ADD_TRANSACTION,
   transaction,
-  buySellError: null,
-  singleStock: {}
+  buySellError: null
 });
 
 export const buySellError = (errMsg) => ({
