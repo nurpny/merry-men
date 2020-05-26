@@ -23,16 +23,33 @@ describe('Models', () => {
             done();
           });
       });
+
+      it('throws an error if not pw does not contain number', function (done) {
+        User.create({
+          email: 'james',
+          password: 'Password',
+          name: 'james'
+        })
+          .then(function () {
+            expect.fail();
+            done();
+          })
+          .catch(function (err) {
+            expect(err['name']).to.be.equal('SequelizeValidationError');
+            done();
+          });
+      });
+
       it('throws an error if not unique email', function (done) {
         User.create({
           email: 'james@email.com',
-          password: '1234',
+          password: 'Password1234',
           name: 'james'
         })
           .then(function () {
             User.create({
               email: 'james@email.com',
-              password: '1234',
+              password: 'Password2345',
               name: 'james'
             });
           })
@@ -47,22 +64,22 @@ describe('Models', () => {
       });
     });
 
-    describe('correctPassword', () => {
+    describe('correct password', () => {
       let james;
       beforeEach(async () => {
         james = await User.create({
           name: 'james',
           email: 'james@gmail.com',
-          password: '1234'
+          password: 'Password1234'
         });
       });
 
       it('returns true if the password is correct', () => {
-        expect(james.correctPassword('1234')).to.be.equal(true);
+        expect(james.correctPassword('Password1234')).to.be.equal(true);
       });
 
       it('returns false if the password is incorrect', () => {
-        expect(james.correctPassword('12345')).to.be.equal(false);
+        expect(james.correctPassword('Password12345')).to.be.equal(false);
       });
     });
   });

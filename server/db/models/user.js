@@ -10,7 +10,8 @@ const User = db.define(
       allowNull: false,
       validate: {
         notNull: true,
-        notEmpty: true
+        notEmpty: true,
+        len: [2, 30]
       }
     },
     email: {
@@ -24,7 +25,9 @@ const User = db.define(
       }
     },
     password: {
-      type: DataTypes.STRING
+      type: DataTypes.STRING,
+      len: [6, null],
+      is: /(?=.*[A-Z])(?=.*[0-9])/i
     },
     salt: {
       type: DataTypes.STRING

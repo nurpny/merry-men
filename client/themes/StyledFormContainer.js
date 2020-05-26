@@ -20,14 +20,14 @@ const StyledFormContainer = styled.form`
 
   input {
     padding: 10px;
-    margin: 5px 5px;
+    margin: 5px 5px 0px 5px;
     box-shadow: 0 0 15px 4px rgba(0, 0, 0, 0.06);
     border-radius: 5px;
     min-width: 300px;
   }
 
   button {
-    margin: 10px;
+    margin: 20px 5px 20px 5px;
     border-radius: 5px;
   }
 `;
