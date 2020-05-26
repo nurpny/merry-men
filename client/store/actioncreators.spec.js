@@ -154,8 +154,7 @@ describe('Action creators', () => {
       const errorMsg = 'Not enough shares';
       expect(buySellError(errorMsg)).to.be.deep.equal({
         type: BUYSELL_ERROR,
-        buySellError: errorMsg,
-        singleStock: {}
+        buySellError: errorMsg
       });
     });
   });

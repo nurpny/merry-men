@@ -18,8 +18,7 @@ export const selectStock = (stock) => ({
 
 export const selectStockError = (errMsg) => ({
   type: BUYSELL_ERROR,
-  buySellError: errMsg,
-  singleStock: {}
+  buySellError: errMsg
 });
 
 export const addQuantity = (quantity) => ({
@@ -42,8 +41,6 @@ export default (state = defaultStock, action) => {
   switch (action.type) {
     case SELECT_STOCK:
       return action.stock;
-    case BUYSELL_ERROR:
-      return action.singleStock;
     case ADD_QUANTITY:
       return { ...state, quantity: action.quantity };
     case ADD_TRANSACTION:

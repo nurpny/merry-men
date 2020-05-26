@@ -26,8 +26,7 @@ export const addTransaction = (transaction) => ({
 
 export const buySellError = (errMsg) => ({
   type: BUYSELL_ERROR,
-  buySellError: errMsg,
-  singleStock: {}
+  buySellError: errMsg
 });
 
 // Thunk Creators
@@ -48,21 +47,12 @@ export const buyingSellingStock = (
   buySell,
   portfolio
 ) => async (dispatch) => {
+  if (!symbol || !symbol.length) {
+    return dispatch(buySellError('Must enter valid stock'));
+  }
   symbol = symbol.toUpperCase();
   quantity =
     buySell === 'buy' ? parseInt(quantity, 10) : -parseInt(quantity, 10);
-  console.log(
-    'symbol',
-    symbol,
-    'quantity',
-    quantity,
-    'userCash',
-    userCash,
-    buySell,
-    'buySell',
-    portfolio,
-    'portfolio'
-  );
   if (buySell === 'sell') {
     // dispatch error if the user does not have enough stocks to sell in the user's portfolio
     let [pftItem] = portfolio.filter((pftItem) => pftItem.symbol === symbol);
@@ -83,7 +73,6 @@ export const buyingSellingStock = (
   try {
     // dispatch error if the user does not have enough cash
     if (buySell === 'buy' && quantity * price > userCash) {
-      console.log('LINE 75 NOT ENOUGH CASH');
       return dispatch(buySellError('Not enough cash'));
     }
     let [newTxn, user] = await updateDBs(symbol, price, quantity);

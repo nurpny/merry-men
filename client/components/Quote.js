@@ -33,7 +33,6 @@ export class Quote extends Component {
   async handleSubmit(evt) {
     evt.preventDefault();
     await this.props.handleSubmit(this.state.symbol);
-    this.setState({ symbol: '' });
   }
 
   render() {
