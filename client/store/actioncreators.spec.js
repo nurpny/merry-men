@@ -143,8 +143,7 @@ describe('Action creators', () => {
       expect(addTransaction(testTransaction)).to.be.deep.equal({
         type: ADD_TRANSACTION,
         transaction: testTransaction,
-        buySellError: null,
-        singleStock: {}
+        buySellError: null
       });
     });
   });
