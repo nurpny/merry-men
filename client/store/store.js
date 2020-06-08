@@ -23,5 +23,5 @@ const store = compose(applyMiddleware(...middlewares))(createStore)(
   rootReducer
 );
 
-export const IEX_PUBLIC_KEY = 'pk_f5f64fabf63c44f4ac83a9e955f59e3e';
+export const IEX_PUBLIC_KEY = 'pk_0022a78449db4eb2a4fcc320c702993b';
 export default store;

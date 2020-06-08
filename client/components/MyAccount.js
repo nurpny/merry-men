@@ -32,6 +32,7 @@ export const MyAccount = (props) => {
 
   return (
     <div>
+      <h1>Merry Men</h1>
       <StyledMenuContainer>
         <StyledMenu onClick={() => setShowTransactions(false)}>
           Portfolio
