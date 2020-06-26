@@ -1,4 +1,4 @@
-# Stock App for Spotify NYC Tech Talent Pipeline
+# Stock App 
 
 This is an web app that allows users to create accounts and buy/sell stocks.
 The app uses latest prices from iex API(https://iexcloud.io/), and assumes that buying and selling occurs at latest market price (rather than asks/bids).
@@ -15,7 +15,7 @@ Server: Node, Express, PostgreSQL, Sequelize\
 Testing: Mocha, Chai, Supertest
 
 ## Deployed Site
-https://stocks-for-nycttp.herokuapp.com/
+https://merry-men.herokuapp.com/
 
 ## To start the application in dev environment
 
