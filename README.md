@@ -1,4 +1,4 @@
-# Stock App 
+# Stock App
 
 This is an web app that allows users to create accounts and buy/sell stocks.\
 The app uses latest prices from iex API(https://iexcloud.io/), and assumes that buying and selling occurs at latest market price (rather than asks/bids).\
@@ -22,7 +22,7 @@ https://merry-men.herokuapp.com/
 You need to have PostgreSQL installed on your machine.
 
 ```
-createdb NYCTTP
+createdb merrymen
 npm install
 npm run seed
 npm run start-dev
@@ -33,8 +33,8 @@ Open http://localhost:8000 to view in browser.
 ## To run the Mocha tests
 
 ```
-createdb NYCTTP-test
-npm run start-test
+createdb merrymen-test
+npm run test
 ```
 
 ## Phase 2
