@@ -11,12 +11,6 @@ const StyledDivContainer = styled.section`
   margin-left: auto;
   margin-right: auto;
   width: 350px;
-
-  h1 {
-    text-align: center;
-    color: ${(props) => props.theme.colors.blue};
-    text-transform: uppercase;
-  }
 `;
 
 export { StyledDivContainer };

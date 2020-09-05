@@ -12,18 +12,6 @@ const StyledFormContainer = styled.form`
   margin-right: auto;
   width: 350px;
 
-  h1 {
-    text-align: center;
-    color: ${(props) => props.theme.colors.blue};
-    text-transform: uppercase;
-  }
-
-  h2 {
-    text-align: center;
-    color: ${(props) => props.theme.colors.blue};
-    text-transform: uppercase;
-  }
-
   input {
     width: 100%;
     padding: 10px;

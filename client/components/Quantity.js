@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import { addQuantity } from '../store/single-stock-store';
 import convertToUSD from '../../utils/convert-to-usd';
 import { StyledInput } from '../themes/StyledInput';
-import { StyledSection, StyledContainer } from './Quote';
+import { StyledSection } from '../themes/StyledSection';
+import { StyledContainer } from '../themes/StyledContainer';
 
 export const Quantity = (props) => {
   const handleChange = (evt) => {

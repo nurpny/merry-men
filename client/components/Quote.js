@@ -2,21 +2,11 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { selectingStock } from '../store/single-stock-store';
 import convertToUSD from '../../utils/convert-to-usd';
-import styled from 'styled-components';
 import { InputContainer } from '../themes/InputContainer';
 import { StyledInput } from '../themes/StyledInput';
 import { StyledButton } from '../themes/StyledButton';
-
-export const StyledContainer = styled.section`
-  width: 300px;
-  margin-bottom: 10px;
-`;
-export const StyledSection = styled.section`
-  text-align: right;
-  font-size: 0.9em;
-  padding-right: 100px;
-  margin-top: 2px;
-`;
+import { StyledSection } from '../themes/StyledSection';
+import { StyledContainer } from '../themes/StyledContainer';
 
 export class Quote extends Component {
   constructor(props) {
