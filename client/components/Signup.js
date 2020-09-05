@@ -11,38 +11,39 @@ export class SignUp extends Component {
       name: '',
       email: '',
       password: '',
-      validName: false,
-      validEmail: false,
-      validPassword: false,
-      valid: false
+      validName: true,
+      validEmail: true,
+      validPassword: true,
+      valid: true
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.validateField = this.validateField.bind(this);
   }
 
-  async validateField(fieldName, value) {
+  async validateField() {
     // validating fields
     // note the use of async await here to ensure that overall valid state is updated AFTER
     // validName/Email/Password is updated
-    switch (fieldName) {
-      case 'email':
-        if (value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i)) {
-          await this.setState({ validEmail: true });
-        }
-        break;
-      case 'password':
-        if (value.length >= 6 && value.match(/[A-Z]/i) && value.match(/\d/)) {
-          await this.setState({ validPassword: true });
-        }
-        break;
-      case 'name':
-        if (value.length > 2) {
-          await this.setState({ validName: true });
-        }
-        break;
-      default:
-        break;
+    console.log(this.state.name, 'validatefield running');
+    if (this.state.name.length <= 2) {
+      await this.setState({ validName: false });
+    } else {
+      await this.setState({ validName: true });
+    }
+    if (!this.state.email.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i)) {
+      await this.setState({ validEmail: false });
+    } else {
+      await this.setState({ validEmail: true });
+    }
+    if (
+      this.state.password.length < 6 ||
+      !this.state.password.match(/[A-Z]/i) ||
+      !this.state.password.match(/\d/)
+    ) {
+      await this.setState({ validPassword: false });
+    } else {
+      await this.setState({ validPassword: true });
     }
     await this.setState({
       valid:
@@ -54,76 +55,63 @@ export class SignUp extends Component {
 
   async handleSubmit(evt) {
     evt.preventDefault();
-    await this.props.signingUp(
-      this.state.name,
-      this.state.email,
-      this.state.password,
-      this.props.history
-    );
+    await this.validateField();
+    if (this.state.valid) {
+      await this.props.signingUp(
+        this.state.name,
+        this.state.email,
+        this.state.password,
+        this.props.history
+      );
+    }
   }
 
   async handleChange(evt) {
-    // setState method takes a callback function as a second argument
-    // note evt.target.name & value have to be assigned to constants to be called in the callback
     const name = evt.target.name;
     const value = evt.target.value;
-    await this.setState({ [name]: value }, () => {
-      this.validateField(name, value);
-    });
+    await this.setState({ [name]: value });
   }
 
   render() {
     return (
       <StyledFormContainer onSubmit={this.handleSubmit}>
         <h1>Sign up Form</h1>
-        <div>
-          <input
-            name="name"
-            placeholder="Name"
-            type="text"
-            onChange={this.handleChange}
-            required="required"
-          ></input>
-        </div>
+        <input
+          name="name"
+          placeholder="Name"
+          type="text"
+          onChange={this.handleChange}
+          required="required"
+        ></input>
+
         <StyledWarningDiv>
-          {!this.state.validName && 'Enter name'}
+          {!this.state.validName && 'Enter a valid name'}
         </StyledWarningDiv>
+        <input
+          name="email"
+          placeholder="Email"
+          type="email"
+          onChange={this.handleChange}
+          required="required"
+        ></input>
+        <StyledWarningDiv>
+          {!this.state.validEmail && 'Enter a valid email'}
+        </StyledWarningDiv>
+        <input
+          name="password"
+          placeholder="Password"
+          type="password"
+          onChange={this.handleChange}
+          required="required"
+        ></input>
 
-        <div>
-          <input
-            name="email"
-            placeholder="Email"
-            type="email"
-            onChange={this.handleChange}
-            required="required"
-          ></input>
-          <StyledWarningDiv>
-            {!this.state.validEmail && 'Enter email'}
-          </StyledWarningDiv>
-        </div>
-
-        <div>
-          <input
-            name="password"
-            placeholder="Password"
-            type="password"
-            onChange={this.handleChange}
-            required="required"
-          ></input>
-        </div>
         <StyledWarningDiv>
           {!this.state.validPassword &&
-            'Password must be at least 6 characters'}
-        </StyledWarningDiv>
-        <StyledWarningDiv>
-          {!this.state.validPassword &&
-            'and include a capital letter and a number'}
+            'Password must be at least 6 characters and include a capital letter and a number'}
         </StyledWarningDiv>
 
-        <button type="submit" disabled={!this.state.valid}>
-          Create Your Account
-        </button>
-        <div>{this.props.error && this.props.error}</div>
+        <button type="submit">Create Your Account</button>
+        {this.props.error && this.props.error}
       </StyledFormContainer>
     );
   }
