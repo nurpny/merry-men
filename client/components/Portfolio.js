@@ -8,7 +8,7 @@ import convertToUSD from '../../utils/convert-to-usd';
 const StyledPftContainer = styled(StyledTableContainer)`
   min-width: 300px;
   width: 400px;
-  h1 {
+  h2 {
     margin-bottom: 0px;
   }
 `;
@@ -45,7 +45,7 @@ export class Portfolio extends Component {
   render() {
     return (
       <StyledPftContainer>
-        <h1>Portfolio</h1>
+        <h2>Portfolio</h2>
         <StyledSummary>
           Cash Available: <span>{convertToUSD(this.props.user.cash)}</span>
         </StyledSummary>

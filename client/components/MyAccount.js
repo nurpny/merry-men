@@ -6,6 +6,9 @@ import Portfolio from './Portfolio';
 import BuySell from './BuySell';
 import { loggingOut } from '../store/user-store.js';
 
+const StyledScreenContainer = styled.section`
+  margin: 10px 20px;
+`;
 const StyledMenuContainer = styled.section`
   display: flex;
   justify-content: flex-end;
@@ -31,7 +34,7 @@ export const MyAccount = (props) => {
   const [showTransactions, setShowTransactions] = useState(false);
 
   return (
-    <div>
+    <StyledScreenContainer>
       <h1>Merry Men</h1>
       <StyledMenuContainer>
         <StyledMenu onClick={() => setShowTransactions(false)}>
@@ -44,7 +47,7 @@ export const MyAccount = (props) => {
         <StyledMenuBorder> | </StyledMenuBorder>
         <StyledMenu onClick={props.loggingOut}>Logout</StyledMenu>
       </StyledMenuContainer>
-
+      <div>Welcome, {props.user.name}!</div>
       {!showTransactions && (
         <PortfolioContainer>
           <Portfolio />
@@ -52,12 +55,16 @@ export const MyAccount = (props) => {
         </PortfolioContainer>
       )}
       {showTransactions && <Transactions />}
-    </div>
+    </StyledScreenContainer>
   );
 };
+
+const mapStateToProps = (state) => ({
+  user: state.user
+});
 
 const mapDispatchToProps = (dispatch) => ({
   loggingOut: () => dispatch(loggingOut())
 });
 
-export default connect(null, mapDispatchToProps)(MyAccount);
+export default connect(mapStateToProps, mapDispatchToProps)(MyAccount);

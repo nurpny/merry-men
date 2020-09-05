@@ -3,11 +3,7 @@ import styled from 'styled-components';
 const StyledTableContainer = styled.section`
   display: flex;
   flex-direction: column;
-  margin: 20px;
-
-  h1 {
-    color: ${(props) => props.theme.colors.blue};
-  }
+  margin: 20px 0px;
 
   table {
     border-collapse: separate;

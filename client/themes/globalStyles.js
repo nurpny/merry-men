@@ -16,7 +16,11 @@ export const GlobalStyle = createGlobalStyle`
   h1 {
     color: ${(props) => props.theme.colors.blue};
     text-transform: uppercase;
-    margin: 20px 10px 0px 10px;
+  }
+
+  h2 {
+    color: ${(props) => props.theme.colors.blue};
+    text-transform: uppercase;
   }
 
   a:link {

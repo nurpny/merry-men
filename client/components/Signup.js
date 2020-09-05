@@ -25,7 +25,6 @@ export class SignUp extends Component {
     // validating fields
     // note the use of async await here to ensure that overall valid state is updated AFTER
     // validName/Email/Password is updated
-    console.log(this.state.name, 'validatefield running');
     if (this.state.name.length <= 2) {
       await this.setState({ validName: false });
     } else {

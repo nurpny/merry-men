@@ -74,7 +74,12 @@ User.verifyPassword = async function (userEmail, candidatePwd) {
     where: { email: userEmail }
   });
   if (user.correctPassword(candidatePwd)) {
-    let userJSON = { id: user.id, email: user.email, cash: user.cash };
+    let userJSON = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      cash: user.cash
+    };
     return userJSON;
   }
 };

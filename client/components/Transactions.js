@@ -12,7 +12,7 @@ export class transactions extends Component {
   render() {
     return (
       <StyledTableContainer>
-        <h1>Transactions</h1>
+        <h2>Transactions</h2>
         <table>
           <thead>
             <tr>
