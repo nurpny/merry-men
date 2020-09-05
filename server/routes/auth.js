@@ -28,6 +28,7 @@ router.post('/signup', async (req, res, next) => {
     const user = await User.create(req.body);
     const userJson = {
       id: user.id,
+      name: user.name,
       email: user.email,
       cash: user.cash
     };
