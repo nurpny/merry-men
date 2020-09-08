@@ -165,7 +165,8 @@ describe('Thunk creators', () => {
 
     it("if the user buys stocks within the user's cash limits, it dispatches addTransaction & getUser actions and calls gettingPortfolio", async () => {
       // below is the response you'd expect from /api/transactions if the transaction was successful
-      const txnRes = {
+
+      const txn = {
         id: 1,
         symbol: 'SPOT',
         price: 19017,
@@ -173,16 +174,14 @@ describe('Thunk creators', () => {
         userId: 1
       };
 
-      // below is the response you'd expect from /api/user if the transaction was successful
-      const userRes = {
+      const user = {
         id: 1,
         name: 'jane',
         email: 'jane@email.com',
-        cash: 190170
+        cash: 309830
       };
 
-      // below is the response you'd expect from /api/portfolio if the transaction was successful
-      const portfRes = [
+      const pftItem = [
         {
           id: 1,
           symbol: 'SPOT',
@@ -193,6 +192,12 @@ describe('Thunk creators', () => {
           price: 19017
         }
       ];
+
+      const response = {
+        txn,
+        user,
+        pftItem
+      };
 
       // below is the abbreviation version of data you'd expect from iex api for SPOT
       const testIexData = {
@@ -206,10 +211,8 @@ describe('Thunk creators', () => {
           `https://cloud.iexapis.com/stable/stock/SPOT/quote/latestPrice?token=${IEX_PUBLIC_KEY}`
         )
         .replyOnce(200, 190.17);
-      mockAxios.onPost('/api/transactions').replyOnce(200, txnRes);
-      mockAxios.onPut('/api/portfolio').replyOnce(200);
-      mockAxios.onPut('/api/user').replyOnce(200, userRes);
-      mockAxios.onGet('/api/portfolio').replyOnce(200, portfRes);
+      mockAxios.onPost('/api/transactions').replyOnce(200, response);
+      mockAxios.onGet('/api/portfolio').replyOnce(200, pftItem);
       mockAxios
         .onGet(
           `https://cloud.iexapis.com/stable/stock/market/batch?symbols=SPOT&types=quote&token=${IEX_PUBLIC_KEY}`
@@ -235,7 +238,7 @@ describe('Thunk creators', () => {
         },
         {
           type: GET_USER,
-          user: { id: 1, name: 'jane', email: 'jane@email.com', cash: 190170 },
+          user: { id: 1, name: 'jane', email: 'jane@email.com', cash: 309830 },
           loginError: null,
           signUpError: null
         }

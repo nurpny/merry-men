@@ -9,17 +9,3 @@ export const getLatestPrice = async (symbol) => {
   );
   return Math.round(data * 100);
 };
-
-export const updateDBs = async (symbol, price, quantity) => {
-  // update the user's portfolio
-  await axios.put(`/api/portfolio`, { symbol, quantity });
-  // update user's cash
-  let user = await axios.put('/api/user', { marketValue: quantity * price });
-  // record the transaction
-  let newTxn = await axios.post(`/api/transactions`, {
-    symbol,
-    price,
-    quantity
-  });
-  return [newTxn.data, user.data];
-};

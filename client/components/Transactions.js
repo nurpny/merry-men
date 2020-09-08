@@ -31,9 +31,9 @@ export class transactions extends Component {
                   <td>{getDateOnly(txn.createdAt)}</td>
                   <td>{txn.id}</td>
                   <td>{txn.symbol}</td>
-                  <td>{convertToUSD(txn.price / 100)}</td>
+                  <td>{convertToUSD(txn.price)}</td>
                   <td>{txn.quantity}</td>
-                  <td>{convertToUSD((-txn.quantity * txn.price) / 100)}</td>
+                  <td>{convertToUSD(-txn.quantity * txn.price)}</td>
                 </tr>
               ))}
             </tbody>

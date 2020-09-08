@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { getLatestPrice, updateDBs } from './thunk-utils';
+import { getLatestPrice } from './thunk-utils';
 import { gettingPortfolio } from './portfolio-store';
 import { getUser } from './user-store';
 import { BUYSELL_ERROR } from './error-store';
@@ -74,8 +74,14 @@ export const buyingSellingStock = (
     if (buySell === 'buy' && quantity * price > userCash) {
       return dispatch(buySellError('Not enough cash'));
     }
-    let [newTxn, user] = await updateDBs(symbol, price, quantity);
-    dispatch(addTransaction(newTxn));
+    let { data } = await axios.post('/api/transactions', {
+      symbol,
+      quantity,
+      price
+    });
+    let { txn, user } = data;
+
+    dispatch(addTransaction(txn));
     dispatch(getUser(user));
     // update user's portfolio view with updated prices for all
     dispatch(gettingPortfolio());

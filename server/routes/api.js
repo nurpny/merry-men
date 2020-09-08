@@ -1,48 +1,46 @@
 const router = require('express').Router();
-const { Portfolio, Transaction, User } = require('../db/index');
+
+const { Portfolio, Transaction, User, db } = require('../db/index');
 
 router.post('/transactions', async (req, res, next) => {
   try {
     const { symbol, price, quantity } = req.body;
-    const txn = await Transaction.create({
-      userId: req.user.id,
-      symbol: symbol,
-      price: price * 100,
-      quantity: quantity
-    });
-    res.json(txn);
-  } catch (err) {
-    next(err);
-  }
-});
+    // managed transactions in sequelize will rollback the transaction if any single error thrown
+    // https://sequelize.org/master/manual/transactions.html
 
-router.put('/portfolio', async (req, res, next) => {
-  try {
-    const { symbol, quantity } = req.body;
-    const [pftItem, created] = await Portfolio.findOrCreate({
-      where: { userId: req.user.id, symbol: symbol },
-      defaults: { quantity: quantity }
-    });
-    if (!created) {
-      pftItem.quantity += quantity;
-      if (pftItem.quantity === 0) {
-        await pftItem.destroy();
+    await db.transaction(async (t) => {
+      // first record a transaction
+      const txn = await Transaction.create(
+        {
+          userId: req.user.id,
+          symbol: symbol,
+          price: price,
+          quantity: quantity
+        },
+        { transaction: t }
+      );
+
+      // update the user
+      const user = await User.findByPk(req.user.id, { transaction: t });
+      user.cash -= quantity * price;
+      await user.save({ transaction: t });
+
+      // update the portfolio
+      const [pftItem, created] = await Portfolio.findOrCreate({
+        where: { userId: req.user.id, symbol: symbol },
+        defaults: { quantity: quantity },
+        transaction: t
+      });
+      if (!created) {
+        pftItem.quantity += quantity;
+        if (pftItem.quantity === 0) {
+          await pftItem.destroy({ transaction: t });
+        } else {
+          await pftItem.save({ transaction: t });
+        }
       }
-      await pftItem.save();
-    }
-    res.json(pftItem);
-  } catch (err) {
-    next(err);
-  }
-});
-
-router.put('/user', async (req, res, next) => {
-  try {
-    const { marketValue } = req.body;
-    const user = await User.findByPk(req.user.id);
-    user.cash -= marketValue;
-    await user.save();
-    res.json(user);
+      res.json({ txn: txn, pftItem: pftItem, user: user });
+    });
   } catch (err) {
     next(err);
   }

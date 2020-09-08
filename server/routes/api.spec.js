@@ -6,9 +6,17 @@ const { User, Transaction, Portfolio } = require('../db/index');
 
 async function createUsers() {
   await User.create({
+    id: 1,
     email: 'mary@gmail.com',
-    password: '1234',
+    password: 'PW1234',
     name: 'mary'
+  });
+  await User.create({
+    id: 2,
+    email: 'nomoney@email.com',
+    password: 'PW1234',
+    name: 'nomoney',
+    cash: 0
   });
 }
 
@@ -42,7 +50,7 @@ async function createPft() {
 
 const userCredentials = {
   email: 'mary@gmail.com',
-  password: '1234'
+  password: 'PW1234'
 };
 
 describe('API routes', () => {
@@ -110,9 +118,12 @@ describe('API routes', () => {
     it('returns a 200 status with json response if the user is logged in', async () => {
       const res = await authenticatedUser
         .post('/api/transactions')
-        .send({ symbol: 'JPM', price: 89.44, quantity: 10 });
+        .send({ symbol: 'JPM', price: 8944, quantity: 7 });
       expect(res.status).to.equal(200);
-      expect(res.body.symbol).to.equal('JPM');
+      expect(res.body.txn.symbol).to.equal('JPM');
+      expect(res.body.pftItem.symbol).to.equal('JPM');
+      expect(res.body.pftItem.quantity).to.equal(7);
+      expect(res.body.user.cash).to.equal(437392);
       expect(res.body).to.be.an.instanceOf(Object);
     });
 
@@ -122,59 +133,33 @@ describe('API routes', () => {
       });
       expect(txn.map((txn) => txn.symbol)).to.include('JPM');
     });
-  });
-
-  describe('PUT /portfolio', () => {
-    // making a new request to the route with unauthenticatedUser should result in a 500 response
-    it('returns a 500 response if the user is not logged in', async () => {
-      const res = await request(app)
-        .put('/api/portfolio')
-        .send({ symbol: 'FB', quantity: 5 });
-      expect(res.status).to.equal(500);
-    });
-
-    // if the user is logged in we should get a 200 status code
-    // and expect response to be updated portfolio object
-    it('returns a 200 status with json response if the user is logged in', async () => {
-      const res = await authenticatedUser
-        .put('/api/portfolio')
-        .send({ symbol: 'FB', quantity: 5 });
-      expect(res.status).to.equal(200);
-      expect(res.body).to.be.an.instanceOf(Object);
-      expect(res.body.quantity).to.equal(7);
-    });
 
     it('updates the portfolio in the database', async () => {
       const pft = await Portfolio.findOne({
-        where: { symbol: 'FB' }
+        where: { symbol: 'JPM' }
       });
       expect(pft.quantity).to.equal(7);
-    });
-  });
-
-  describe('PUT /user', () => {
-    // making a new request to the route with unauthenticatedUser should result in a 500 response
-    it('returns a 500 response if the user is not logged in', async () => {
-      const res = await request(app)
-        .put('/api/user')
-        .send({ marketValue: 10000 });
-      expect(res.status).to.equal(500);
-    });
-
-    // if the user is logged in we should get a 200 status code
-    // and expect response to be updated user object
-    it('returns a 200 status with json response if the user is logged in', async () => {
-      const res = await authenticatedUser
-        .put('/api/user')
-        .send({ marketValue: 10000 });
-      expect(res.status).to.equal(200);
-      expect(res.body).to.be.an.instanceOf(Object);
-      expect(res.body.cash).to.equal(490000);
     });
 
     it('updates the user in the database', async () => {
       const user = await User.findByPk(1);
-      expect(user.cash).to.equal(490000);
+      expect(user.cash).to.equal(437392);
+    });
+
+    it('if one transaction fails all should fail', async () => {
+      const errorUser = {
+        email: 'nomoney@email.com',
+        password: 'PW1234'
+      };
+      await authenticatedUser.post('/auth/login').send(errorUser);
+      const res = await authenticatedUser
+        .post('/api/transactions')
+        .send({ symbol: 'SPOT', price: 24821, quantity: 2 });
+      expect(res.status).to.equal(500);
+      const txn = await Transaction.findAll({
+        where: { userId: 2 }
+      });
+      expect(txn.map((txn) => txn.symbol)).to.not.include('SPOT');
     });
   });
 });
